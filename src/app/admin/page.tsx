@@ -90,7 +90,7 @@ export default function AdminPage() {
                                 <Icon className="h-5 w-5 text-muted-foreground" />
                             </div>
                             <div>
-                                <p className="text-sm font-medium">{activity.type} <Badge variant={activity.variant as any} className="ml-2">{activity.variant}</Badge></p>
+                                <div className="text-sm font-medium">{activity.type} <Badge variant={activity.variant as any} className="ml-2">{activity.variant}</Badge></div>
                                 <p className="text-sm text-muted-foreground">{activity.description}</p>
                                 <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
                             </div>
