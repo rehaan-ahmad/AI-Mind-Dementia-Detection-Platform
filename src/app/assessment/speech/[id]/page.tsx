@@ -22,7 +22,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 
 export default function SpeechAssessmentPage({ params }: { params: { id: string } }) {
-  const patient = patients.find((p) => p.id === params.id);
+  const patientId = params.id;
+  const patient = React.useMemo(() => patients.find((p) => p.id === patientId), [patientId]);
   const { toast } = useToast();
   
   const [analysisResult, setAnalysisResult] = React.useState<AnalyzeSpeechForDementiaIndicatorsOutput | null>(null);

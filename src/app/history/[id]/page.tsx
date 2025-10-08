@@ -1,6 +1,9 @@
 
+'use client';
+
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import * as React from 'react';
 import {
   Card,
   CardContent,
@@ -41,12 +44,14 @@ function TimelineItem({ event, isLast }: { event: TimelineEvent, isLast: boolean
   );
 }
 
-export default async function PatientHistoryPage({
+export default function PatientHistoryPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const patient = patients.find((p) => p.id === params.id);
+  const patientId = params.id;
+  const patient = React.useMemo(() => patients.find((p) => p.id === patientId), [patientId]);
+
 
   if (!patient) {
     notFound();
