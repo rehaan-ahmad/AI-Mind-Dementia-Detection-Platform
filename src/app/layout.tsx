@@ -19,6 +19,9 @@ import { Toaster } from '@/components/ui/toaster';
 import { Button } from '@/components/ui/button';
 import { AuthProvider, useAuth } from '@/app/auth/auth-provider';
 import { usePathname } from 'next/navigation';
+import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeToggle } from '@/components/theme-toggle';
+
 
 function AppLayout({
   children,
@@ -70,6 +73,7 @@ function AppLayout({
           <Button asChild>
             <Link href="/patients/new">Add New Patient</Link>
           </Button>
+          <ThemeToggle />
           <UserNav />
         </header>
         <main className="flex-1 p-4 md:p-8">{children}</main>
@@ -99,10 +103,17 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <AuthProvider>
-          <AppLayout>{children}</AppLayout>
-        </AuthProvider>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>
+            <AppLayout>{children}</AppLayout>
+          </AuthProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
