@@ -44,17 +44,7 @@ function getRiskBadgeVariant(level: Patient['riskAssessment']['level']) {
   }
 }
 
-export default async function PatientDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const patient = patients.find((p) => p.id === params.id);
-
-  if (!patient) {
-    notFound();
-  }
-
+async function PatientDetails({ patient }: { patient: Patient }) {
   const [summaryResult, rationaleResult] = await Promise.all([
     generateInitialPatientSummary({
       mriScanSummary: patient.mriScanSummary,
@@ -268,4 +258,18 @@ export default async function PatientDetailPage({
       </Card>
     </div>
   );
+}
+
+export default function PatientDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const patient = patients.find((p) => p.id === params.id);
+
+  if (!patient) {
+    notFound();
+  }
+
+  return <PatientDetails patient={patient} />;
 }
