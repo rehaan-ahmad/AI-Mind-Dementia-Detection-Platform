@@ -1,3 +1,4 @@
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,7 +22,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { generateInitialPatientSummary } from '@/ai/flows/generate-initial-patient-summary';
 import { explainRiskAssessmentRationale } from '@/ai/flows/explain-risk-assessment-rationale';
-import { ArrowLeft, Bot, FileText, History, Scan, Stethoscope, Mic } from 'lucide-react';
+import { ArrowLeft, Bot, FileText, History, Scan, Stethoscope, Mic, Footprints } from 'lucide-react';
 import { RiskVisualization } from '@/components/risk-visualization';
 import { Badge } from '@/components/ui/badge';
 
@@ -70,7 +71,7 @@ export default async function PatientDetailPage({
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-4">
             <Button variant="outline" size="icon" asChild>
             <Link href="/">
@@ -85,12 +86,20 @@ export default async function PatientDetailPage({
             </p>
             </div>
         </div>
-        <Button asChild>
-            <Link href={`/assessment/speech/${patient.id}`}>
-                <Mic className="mr-2 h-4 w-4" />
-                Start Speech Assessment
-            </Link>
-        </Button>
+        <div className="flex gap-2">
+            <Button asChild variant="outline">
+                <Link href={`/assessment/gait/${patient.id}`}>
+                    <Footprints className="mr-2 h-4 w-4" />
+                    Start Gait Assessment
+                </Link>
+            </Button>
+            <Button asChild>
+                <Link href={`/assessment/speech/${patient.id}`}>
+                    <Mic className="mr-2 h-4 w-4" />
+                    Start Speech Assessment
+                </Link>
+            </Button>
+        </div>
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -147,7 +156,7 @@ export default async function PatientDetailPage({
           <CardTitle>Patient Data</CardTitle>
           <CardDescription>
             Detailed information from the patient's record.
-          </CardDescription>
+          </description>
         </CardHeader>
         <CardContent>
           <Accordion type="single" collapsible defaultValue="item-1">
