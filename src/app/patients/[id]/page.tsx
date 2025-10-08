@@ -22,7 +22,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { generateInitialPatientSummary } from '@/ai/flows/generate-initial-patient-summary';
 import { explainRiskAssessmentRationale } from '@/ai/flows/explain-risk-assessment-rationale';
-import { ArrowLeft, Bot, FileText, History, Scan, Stethoscope, Mic, Footprints, BookOpen, Users, Pill, Activity } from 'lucide-react';
+import { ArrowLeft, Bot, FileText, History, Scan, Stethoscope, Mic, Footprints, BookOpen, Users, Pill, Activity, BarChart3 } from 'lucide-react';
 import { RiskVisualization } from '@/components/risk-visualization';
 import { Badge } from '@/components/ui/badge';
 
@@ -86,17 +86,23 @@ export default async function PatientDetailPage({
             </p>
             </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
             <Button asChild variant="outline">
                 <Link href={`/assessment/gait/${patient.id}`}>
                     <Footprints className="mr-2 h-4 w-4" />
-                    Start Gait Assessment
+                    Gait Assessment
                 </Link>
             </Button>
-            <Button asChild>
+            <Button asChild variant="outline">
                 <Link href={`/assessment/speech/${patient.id}`}>
                     <Mic className="mr-2 h-4 w-4" />
-                    Start Speech Assessment
+                    Speech Assessment
+                </Link>
+            </Button>
+             <Button asChild>
+                <Link href={`/results/${patient.id}`}>
+                    <BarChart3 className="mr-2 h-4 w-4" />
+                    View Results Dashboard
                 </Link>
             </Button>
         </div>
