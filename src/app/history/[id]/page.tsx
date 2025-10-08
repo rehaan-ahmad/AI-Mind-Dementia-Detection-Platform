@@ -49,8 +49,7 @@ export default function PatientHistoryPage({
 }: {
   params: { id: string };
 }) {
-  const patientId = React.useMemo(() => params.id, [params.id]);
-  const patient = React.useMemo(() => patients.find((p) => p.id === patientId), [patientId]);
+  const patient = patients.find((p) => p.id === params.id);
 
 
   if (!patient) {
