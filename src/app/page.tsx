@@ -14,7 +14,7 @@ export default function LandingPage() {
         </Link>
         <nav className="ml-auto flex items-center gap-4 sm:gap-6">
           <Link
-            href="/dashboard"
+            href="/login"
             className="text-sm font-medium hover:underline underline-offset-4"
             prefetch={false}
           >
