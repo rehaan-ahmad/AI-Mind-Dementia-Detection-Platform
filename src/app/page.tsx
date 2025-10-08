@@ -21,7 +21,7 @@ export default function LandingPage() {
             Login
           </Link>
           <Button asChild>
-             <Link href="/dashboard">Get Started</Link>
+             <Link href="/login">Get Started</Link>
           </Button>
         </nav>
       </header>
