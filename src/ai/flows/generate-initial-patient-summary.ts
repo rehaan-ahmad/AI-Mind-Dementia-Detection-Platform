@@ -1,10 +1,9 @@
-// src/ai/flows/generate-initial-patient-summary.ts
 'use server';
 /**
  * @fileOverview Generates an initial patient summary using GenAI.
  *
  * - generateInitialPatientSummary - A function that generates the patient summary.
- * - GenerateInitialPatientSummaryInput - The input type for the generateInitialPatientSummary function.
+ * - GenerateInitialPatientSummaryInput - The input type for the generateInitialPatient-summary function.
  * - GenerateInitialPatientSummaryOutput - The return type for the generateInitialPatientSummary function.
  */
 
@@ -26,9 +25,15 @@ export type GenerateInitialPatientSummaryOutput = z.infer<typeof GenerateInitial
 export async function generateInitialPatientSummary(
   input: GenerateInitialPatientSummaryInput
 ): Promise<GenerateInitialPatientSummaryOutput> {
-  return generateInitialPatientSummaryFlow(input);
+  // return generateInitialPatientSummaryFlow(input);
+  console.log("Mocking AI call for generateInitialPatientSummary");
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return {
+    summary: `The patient presents with a significant history of hypertension and hyperlipidemia. Cognitive tests reveal difficulties with delayed recall and complex attention (MMSE 24/30). An MRI shows mild cortical atrophy, consistent with age. The patient's primary complaints include increased memory lapses and word-finding difficulties over the last 18 months, corroborated by family members who have also noted increased irritability.`
+  };
 }
 
+/*
 const prompt = ai.definePrompt({
   name: 'generateInitialPatientSummaryPrompt',
   input: {schema: GenerateInitialPatientSummaryInputSchema},
@@ -54,3 +59,4 @@ const generateInitialPatientSummaryFlow = ai.defineFlow(
     return output!;
   }
 );
+*/

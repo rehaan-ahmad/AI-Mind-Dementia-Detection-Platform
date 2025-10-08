@@ -22,9 +22,14 @@ const ExplainRiskAssessmentRationaleOutputSchema = z.object({
 export type ExplainRiskAssessmentRationaleOutput = z.infer<typeof ExplainRiskAssessmentRationaleOutputSchema>;
 
 export async function explainRiskAssessmentRationale(input: ExplainRiskAssessmentRationaleInput): Promise<ExplainRiskAssessmentRationaleOutput> {
-  return explainRiskAssessmentRationaleFlow(input);
+  // return explainRiskAssessmentRationaleFlow(input);
+  console.log("Mocking AI call for explainRiskAssessmentRationale");
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return {
+    explanation: "The patient's risk assessment is primarily driven by significant cerebral atrophy observed in the medial temporal lobes on the MRI scan, which is a key indicator for neurodegeneration. This is compounded by a notable decline in cognitive test scores, particularly in memory recall and executive function. The patient's history of type 2 diabetes and a prior lacunar infarct also contribute as vascular risk factors. While family history is not present, the combination of imaging, cognitive decline, and vascular history points towards a high-risk profile."
+  };
 }
-
+/*
 const prompt = ai.definePrompt({
   name: 'explainRiskAssessmentRationalePrompt',
   input: {schema: ExplainRiskAssessmentRationaleInputSchema},
@@ -50,3 +55,4 @@ const explainRiskAssessmentRationaleFlow = ai.defineFlow(
     return output!;
   }
 );
+*/

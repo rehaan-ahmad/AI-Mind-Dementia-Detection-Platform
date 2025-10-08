@@ -39,9 +39,28 @@ export const AnalyzeSpeechForDementiaIndicatorsOutputSchema = z.object({
 export type AnalyzeSpeechForDementiaIndicatorsOutput = z.infer<typeof AnalyzeSpeechForDementiaIndicatorsOutputSchema>;
 
 export async function analyzeSpeechForDementiaIndicators(input: AnalyzeSpeechForDementiaIndicatorsInput): Promise<AnalyzeSpeechForDementiaIndicatorsOutput> {
-  return analyzeSpeechForDementiaIndicatorsFlow(input);
+  // return analyzeSpeechForDementiaIndicatorsFlow(input);
+  console.log("Mocking AI call for analyzeSpeechForDementiaIndicators");
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  return {
+    linguistic_features: {
+      wordFindingDifficulty: Math.random() > 0.5,
+      sentenceFragmentation: Math.random() > 0.6,
+      repetition: Math.random() > 0.7,
+      lossOfCoherence: Math.random() > 0.8,
+    },
+    acoustic_features: {
+      speechRate: 120 + (Math.random() * 40 - 20),
+      pitchVariability: ['Low', 'Normal', 'High'][Math.floor(Math.random() * 3)] as 'Low'|'Normal'|'High',
+      hesitationRatio: Math.random() * 0.3,
+    },
+    risk_probability: Math.random() * 0.7 + 0.1,
+    confidence: Math.random() * 0.4 + 0.6,
+    key_indicators: ['Slow speech rate', 'Word-finding difficulty', 'Low pitch variability'].slice(0, Math.floor(Math.random()*3)+1),
+  };
 }
 
+/*
 const prompt = ai.definePrompt({
   name: 'analyzeSpeechForDementiaIndicatorsPrompt',
   input: {schema: AnalyzeSpeechForDementiaIndicatorsInputSchema},
@@ -76,3 +95,4 @@ const analyzeSpeechForDementiaIndicatorsFlow = ai.defineFlow(
     return output!;
   }
 );
+*/
