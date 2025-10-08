@@ -61,6 +61,58 @@ const riskLevelOrder: { [key in Patient['riskAssessment']['level']]: number } = 
 };
 
 
+const PatientRow = React.memo(({ patient }: { patient: Patient }) => {
+    return (
+        <TableRow>
+            <TableCell className="hidden sm:table-cell">
+            <Image
+                alt="Patient avatar"
+                className="aspect-square rounded-full object-cover"
+                height="64"
+                src={getAvatarUrl(patient)}
+                width="64"
+                data-ai-hint="person portrait"
+            />
+            </TableCell>
+            <TableCell className="font-medium">{patient.name}</TableCell>
+            <TableCell>{patient.age}</TableCell>
+            <TableCell className="hidden md:table-cell">
+            {patient.gender}
+            </TableCell>
+            <TableCell>
+            <Badge variant={getRiskBadgeVariant(patient.riskAssessment.level)}>
+                {patient.riskAssessment.level}
+            </Badge>
+            </TableCell>
+            <TableCell>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                <Button
+                    aria-haspopup="true"
+                    size="icon"
+                    variant="ghost"
+                >
+                    <MoreHorizontal className="h-4 w-4" />
+                    <span className="sr-only">Toggle menu</span>
+                </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                    <Link href={`/patients/${patient.id}`}>View Details</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem className="text-destructive focus:text-destructive">
+                    Delete
+                </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            </TableCell>
+        </TableRow>
+    );
+});
+PatientRow.displayName = 'PatientRow';
+
+
 export default function Dashboard() {
     const [filter, setFilter] = React.useState('');
     const [sortKey, setSortKey] = React.useState<SortKey>('riskAssessment.level');
@@ -214,51 +266,7 @@ export default function Dashboard() {
             </TableHeader>
             <TableBody>
               {sortedAndFilteredPatients.map((patient) => (
-                <TableRow key={patient.id}>
-                  <TableCell className="hidden sm:table-cell">
-                    <Image
-                      alt="Patient avatar"
-                      className="aspect-square rounded-full object-cover"
-                      height="64"
-                      src={getAvatarUrl(patient)}
-                      width="64"
-                      data-ai-hint="person portrait"
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">{patient.name}</TableCell>
-                  <TableCell>{patient.age}</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {patient.gender}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={getRiskBadgeVariant(patient.riskAssessment.level)}>
-                      {patient.riskAssessment.level}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-haspopup="true"
-                          size="icon"
-                          variant="ghost"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                          <Link href={`/patients/${patient.id}`}>View Details</Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive focus:text-destructive">
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+                <PatientRow key={patient.id} patient={patient} />
               ))}
             </TableBody>
           </Table>
