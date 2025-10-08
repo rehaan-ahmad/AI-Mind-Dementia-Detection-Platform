@@ -17,8 +17,8 @@ export function MainNav() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <Link href="/">
-          <SidebarMenuButton isActive={pathname === '/'} tooltip="Dashboard">
+        <Link href="/dashboard">
+          <SidebarMenuButton isActive={pathname.startsWith('/dashboard')} tooltip="Dashboard">
             <LayoutDashboard />
             <span>Dashboard</span>
           </SidebarMenuButton>
