@@ -1,9 +1,10 @@
+
 import type { Patient } from './types';
 
 export const patients: Patient[] = [
   {
     id: 'pat_1',
-    name: 'Johnathan "John" Doe',
+    name: 'Arjun Kumar',
     age: 72,
     gender: 'Male',
     avatarId: 'avatar1',
@@ -34,7 +35,7 @@ export const patients: Patient[] = [
   },
   {
     id: 'pat_2',
-    name: 'Eleanor Vance',
+    name: 'Priya Sharma',
     age: 68,
     gender: 'Female',
     avatarId: 'avatar2',
@@ -63,7 +64,7 @@ export const patients: Patient[] = [
   },
   {
     id: 'pat_3',
-    name: 'Samuel "Sam" Jones',
+    name: 'Vikram Singh',
     age: 81,
     gender: 'Male',
     avatarId: 'avatar3',
