@@ -105,7 +105,7 @@ export default function AdminPage() {
         <CardHeader>
           <CardTitle>System Management</CardTitle>
           <CardDescription>
-            This section is for administrative use only. Future features will include a comprehensive User Management system with role-based access control (RBAC), a Data Browser for database management, and robust Backup & Restore utilities.
+            This section is for administrative use only. Future features will include a comprehensive User Management system with role-based access control (RBAC), a Data Browser for database management, robust Backup & Restore utilities, and a complete Audit Trail for security and compliance monitoring.
           </CardDescription>
         </CardHeader>
         <CardContent>
