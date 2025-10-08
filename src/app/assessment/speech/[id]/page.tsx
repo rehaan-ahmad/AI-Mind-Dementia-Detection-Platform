@@ -22,6 +22,20 @@ export default function SpeechAssessmentPage({ params }: { params: { id: string 
     notFound();
   }
 
+  const handleRecordingComplete = (audioBlob: Blob, duration: number) => {
+    console.log('Recording complete!');
+    console.log('Blob size:', audioBlob.size);
+    console.log('Blob type:', audioBlob.type);
+    console.log('Duration:', duration, 'seconds');
+    // In a real app, you would upload the blob to a server here.
+    // e.g., uploadAudio(audioBlob);
+  };
+
+  const handleError = (error: string) => {
+    console.error("Recorder Error:", error);
+    // You could show a more prominent error message to the user here.
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex items-center gap-4">
@@ -43,11 +57,16 @@ export default function SpeechAssessmentPage({ params }: { params: { id: string 
         <CardHeader>
           <CardTitle>Record Patient's Speech</CardTitle>
           <CardDescription>
-            Ask the patient to describe a memory or a picture. The system will record and transcribe their response.
+            Ask the patient to describe a recent memory or a picture. The system will record their response for analysis.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AudioRecorder />
+          <AudioRecorder 
+            onRecordingComplete={handleRecordingComplete}
+            onError={handleError}
+            maxDuration={120} // 2 minutes
+            instructions="Please press 'Start Recording' and ask the patient to speak clearly. The recording will stop automatically after 2 minutes."
+          />
         </CardContent>
       </Card>
     </div>

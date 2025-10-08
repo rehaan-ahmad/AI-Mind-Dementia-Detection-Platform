@@ -2,59 +2,246 @@
 
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Mic, Square, Loader2, Info } from 'lucide-react';
+import { Mic, Square, Loader2, Info, Play, Pause, Trash2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Progress } from './ui/progress';
+import { Card } from './ui/card';
 
-export function AudioRecorder() {
+// --- Helper Components ---
+
+interface AudioVisualizerProps {
+  mediaStream: MediaStream | null;
+  isRecording: boolean;
+}
+
+const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ mediaStream, isRecording }) => {
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+  React.useEffect(() => {
+    if (!mediaStream || !canvasRef.current) return;
+
+    const audioContext = new AudioContext();
+    const analyser = audioContext.createAnalyser();
+    const source = audioContext.createMediaStreamSource(mediaStream);
+    source.connect(analyser);
+
+    analyser.fftSize = 256;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const canvas = canvasRef.current;
+    const canvasCtx = canvas.getContext('2d');
+    let animationFrameId: number;
+
+    const draw = () => {
+      animationFrameId = requestAnimationFrame(draw);
+      analyser.getByteTimeDomainData(dataArray);
+      
+      if (canvasCtx) {
+        canvasCtx.fillStyle = 'hsl(var(--muted))';
+        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeStyle = 'hsl(var(--primary))';
+        canvasCtx.beginPath();
+
+        const sliceWidth = (canvas.width * 1.0) / bufferLength;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+          const v = dataArray[i] / 128.0;
+          const y = (v * canvas.height) / 2;
+
+          if (i === 0) {
+            canvasCtx.moveTo(x, y);
+          } else {
+            canvasCtx.lineTo(x, y);
+          }
+
+          x += sliceWidth;
+        }
+
+        canvasCtx.lineTo(canvas.width, canvas.height / 2);
+        canvasCtx.stroke();
+      }
+    };
+    
+    if (isRecording) {
+      draw();
+    } else if (canvasCtx) {
+        // Clear canvas when not recording
+        canvasCtx.fillStyle = 'hsl(var(--muted))';
+        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      source.disconnect();
+      audioContext.close();
+    };
+  }, [mediaStream, isRecording]);
+
+  return <canvas ref={canvasRef} className="w-full h-24 rounded-md" />;
+};
+
+
+// --- Main Component ---
+
+interface SpeechRecorderProps {
+  onRecordingComplete: (audioBlob: Blob, duration: number) => void;
+  maxDuration?: number; // in seconds
+  instructions?: string;
+  onError?: (error: string) => void;
+}
+
+
+export function AudioRecorder({ onRecordingComplete, maxDuration = 60, instructions, onError }: SpeechRecorderProps) {
   const { toast } = useToast();
   const [hasMicPermission, setHasMicPermission] = React.useState(false);
   const [isRecording, setIsRecording] = React.useState(false);
-  const [transcript, setTranscript] = React.useState('');
+  const [isPaused, setIsPaused] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-
+  const [recordedBlob, setRecordedBlob] = React.useState<Blob | null>(null);
+  const [audioUrl, setAudioUrl] = React.useState<string | null>(null);
+  const [recordingTime, setRecordingTime] = React.useState(0);
+  
+  const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = React.useRef<MediaStream | null>(null);
+  const timerIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
+  
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+  
   React.useEffect(() => {
-    const getMicPermission = async () => {
+    async function getMicPermission() {
       try {
-        // We only need audio for this component
-        await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: {
+            sampleRate: 16000,
+            channelCount: 1,
+        } });
+        mediaStreamRef.current = stream;
         setHasMicPermission(true);
       } catch (error) {
         console.error('Error accessing microphone:', error);
         setHasMicPermission(false);
+        const errorMessage = 'Microphone access denied. Please enable it in your browser settings.';
+        if(onError) onError(errorMessage);
         toast({
           variant: 'destructive',
           title: 'Microphone Access Denied',
-          description: 'Please enable microphone permissions in your browser settings.',
+          description: errorMessage,
         });
       }
-    };
-    getMicPermission();
-  }, [toast]);
-
-  const handleToggleRecording = () => {
-    if (isRecording) {
-      // In a real app, you would stop the recording and speech-to-text process here.
-      setIsRecording(false);
-      // For demonstration, we populate with a sample transcript.
-      setTranscript('The patient described their childhood home, recalling the "big oak tree in the front yard" and the "smell of freshly baked bread on Sundays." Speech was clear but somewhat slow. Some word-finding difficulty was noted when trying to recall the name of their elementary school.');
-    } else {
-      // In a real app, you would start the recording and speech-to-text process here.
-      setIsRecording(true);
-      setTranscript('');
     }
+    getMicPermission();
+    
+    return () => {
+        // Cleanup stream and timer on component unmount
+        if (mediaStreamRef.current) {
+            mediaStreamRef.current.getTracks().forEach(track => track.stop());
+        }
+        if (timerIntervalRef.current) {
+            clearInterval(timerIntervalRef.current);
+        }
+    }
+  }, [toast, onError]);
+
+  const startTimer = () => {
+    timerIntervalRef.current = setInterval(() => {
+        setRecordingTime(prevTime => {
+            if (prevTime >= maxDuration) {
+                stopRecording();
+                return maxDuration;
+            }
+            return prevTime + 1;
+        });
+    }, 1000);
+  };
+  
+  const stopTimer = () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+  }
+
+  const startRecording = () => {
+    if (!mediaStreamRef.current) return;
+    setIsRecording(true);
+    setIsPaused(false);
+    setRecordedBlob(null);
+    if(audioUrl) URL.revokeObjectURL(audioUrl);
+    setAudioUrl(null);
+    setRecordingTime(0);
+
+    mediaRecorderRef.current = new MediaRecorder(mediaStreamRef.current, { mimeType: 'audio/webm' });
+    const audioChunks: Blob[] = [];
+
+    mediaRecorderRef.current.ondataavailable = event => {
+      audioChunks.push(event.data);
+    };
+
+    mediaRecorderRef.current.onstop = () => {
+      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      setRecordedBlob(audioBlob);
+      const url = URL.createObjectURL(audioBlob);
+      setAudioUrl(url);
+    };
+
+    mediaRecorderRef.current.start();
+    startTimer();
   };
 
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      setIsPaused(false);
+      stopTimer();
+    }
+  };
+  
+  const togglePauseResume = () => {
+    if (mediaRecorderRef.current) {
+        if(isPaused) {
+            mediaRecorderRef.current.resume();
+            startTimer();
+        } else {
+            mediaRecorderRef.current.pause();
+            stopTimer();
+        }
+        setIsPaused(!isPaused);
+    }
+  }
+
+  const resetRecording = () => {
+      stopRecording();
+      setRecordedBlob(null);
+      if(audioUrl) URL.revokeObjectURL(audioUrl);
+      setAudioUrl(null);
+      setRecordingTime(0);
+      setIsPaused(false);
+  }
+
   const handleSubmit = async () => {
+    if (!recordedBlob) return;
     setIsSubmitting(true);
-    // Simulate an API call to save the assessment
+    
+    // Pass blob and duration to parent
+    onRecordingComplete(recordedBlob, recordingTime);
+    
+    // Simulate an API call
     await new Promise(res => setTimeout(res, 1500));
     toast({
         title: 'Assessment Submitted',
-        description: 'The speech assessment has been saved.',
+        description: 'The speech recording has been saved for analysis.',
     });
     setIsSubmitting(false);
+    resetRecording();
   };
 
   return (
@@ -68,51 +255,60 @@ export function AudioRecorder() {
               </AlertDescription>
             </Alert>
           )}
+          
+      {instructions && <p className="text-muted-foreground">{instructions}</p>}
 
-      <div className="bg-muted rounded-lg p-4 flex flex-col items-center justify-center space-y-4 min-h-[150px]">
-         {isRecording && <div className="text-sm text-muted-foreground">Recording...</div>}
-        <Button
-          onClick={handleToggleRecording}
-          disabled={!hasMicPermission}
-          size="lg"
-          variant={isRecording ? 'destructive' : 'default'}
-        >
-          {isRecording ? (
-            <>
-              <Square className="mr-2 h-5 w-5" />
-              Stop Recording
-            </>
-          ) : (
-            <>
-              <Mic className="mr-2 h-5 w-5" />
-              Start Recording
-            </>
-          )}
-        </Button>
-      </div>
+      <Card className="bg-muted p-4 space-y-4">
+        <AudioVisualizer mediaStream={mediaStreamRef.current} isRecording={isRecording && !isPaused} />
+        
+        <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+                <p className="text-sm font-mono text-foreground" data-testid="timer">
+                    {formatTime(recordingTime)} / {formatTime(maxDuration)}
+                </p>
+                {isRecording && <Progress value={(recordingTime/maxDuration) * 100} className="w-32 h-2" />}
+            </div>
 
-      <div>
-        <label htmlFor="transcript" className="block text-sm font-medium text-foreground mb-2">
-          Live Transcript
-        </label>
-        <Textarea
-          id="transcript"
-          placeholder="The live transcript of the patient's speech will appear here..."
-          value={transcript}
-          readOnly={isRecording}
-          onChange={(e) => setTranscript(e.target.value)}
-          className="min-h-[150px] bg-background"
-        />
-        <p className="text-sm text-muted-foreground mt-2">
-          You can manually edit the transcript after recording is complete.
-        </p>
-      </div>
-      <div className="flex justify-end">
-          <Button onClick={handleSubmit} disabled={isSubmitting || !transcript || isRecording}>
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Save Assessment
-          </Button>
+            <div className="flex items-center gap-2">
+                {!isRecording && !recordedBlob && (
+                    <Button onClick={startRecording} disabled={!hasMicPermission} size="lg" aria-label="Start recording">
+                        <Mic className="mr-2 h-5 w-5" /> Start Recording
+                    </Button>
+                )}
+                
+                {isRecording && (
+                    <>
+                    <Button onClick={togglePauseResume} variant="secondary" size="icon" aria-label={isPaused ? 'Resume recording' : 'Pause recording'}>
+                       {isPaused ? <Play /> : <Pause />}
+                    </Button>
+                     <Button onClick={stopRecording} variant="destructive" size="icon" aria-label="Stop recording">
+                        <Square />
+                    </Button>
+                    </>
+                )}
+            </div>
         </div>
+      </Card>
+      
+      {audioUrl && recordedBlob && (
+        <Card className="p-4 space-y-4">
+            <h3 className="font-medium">Review Recording</h3>
+            <audio controls src={audioUrl} className="w-full">
+                Your browser does not support the audio element.
+            </audio>
+            <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={resetRecording} disabled={isSubmitting} aria-label="Discard recording">
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Discard
+                </Button>
+                <Button onClick={handleSubmit} disabled={isSubmitting} aria-label="Save assessment">
+                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Save Assessment
+                </Button>
+            </div>
+        </Card>
+      )}
+
     </div>
   );
 }
