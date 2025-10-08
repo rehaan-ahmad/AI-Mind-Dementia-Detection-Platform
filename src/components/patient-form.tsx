@@ -213,7 +213,7 @@ export function PatientForm() {
                         <FormControl>
                             <Textarea
                             placeholder="Describe the patient's primary complaint and relevant medical history..."
-                            className="min-h-[100px]"
+                            className="min-h-[120px]"
                             {...field}
                             />
                         </FormControl>
@@ -230,7 +230,7 @@ export function PatientForm() {
                     <FormControl>
                         <Textarea
                         placeholder="Note any family history of dementia or other neurological disorders..."
-                        className="min-h-[80px]"
+                        className="min-h-[100px]"
                         {...field}
                         />
                     </FormControl>
@@ -247,7 +247,7 @@ export function PatientForm() {
                     <FormControl>
                         <Textarea
                         placeholder="List all current medications and dosages..."
-                        className="min-h-[80px]"
+                        className="min-h-[100px]"
                         {...field}
                         />
                     </FormControl>
@@ -270,7 +270,7 @@ export function PatientForm() {
                     <FormControl>
                         <Textarea
                         placeholder="Describe the patient's ability to perform daily tasks (e.g., bathing, dressing, finances)..."
-                        className="min-h-[100px]"
+                        className="min-h-[120px]"
                         {...field}
                         />
                     </FormControl>
@@ -287,7 +287,7 @@ export function PatientForm() {
                     <FormControl>
                         <Textarea
                         placeholder="Enter key findings from the physical and neurological exam..."
-                        className="min-h-[100px]"
+                        className="min-h-[120px]"
                         {...field}
                         />
                     </FormControl>
@@ -310,7 +310,7 @@ export function PatientForm() {
                         <FormControl>
                             <Textarea
                             placeholder="Enter results from MMSE, MoCA, etc."
-                            className="min-h-[100px]"
+                            className="min-h-[120px]"
                             {...field}
                             />
                         </FormControl>
@@ -328,7 +328,7 @@ export function PatientForm() {
                         <FormControl>
                             <Textarea
                             placeholder="Summarize key findings from the MRI report."
-                            className="min-h-[100px]"
+                            className="min-h-[120px]"
                             {...field}
                             />
                         </FormControl>
