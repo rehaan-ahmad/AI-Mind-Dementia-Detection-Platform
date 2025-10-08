@@ -31,20 +31,10 @@ export const AnalyzeGaitForDementiaIndicatorsOutputSchema = z.object({
 export type AnalyzeGaitForDementiaIndicatorsOutput = z.infer<typeof AnalyzeGaitForDementiaIndicatorsOutputSchema>;
 
 export async function analyzeGaitForDementiaIndicators(input: AnalyzeGaitForDementiaIndicatorsInput): Promise<AnalyzeGaitForDementiaIndicatorsOutput> {
-  // return analyzeGaitForDementiaIndicatorsFlow(input);
-  console.log("Mocking AI call for analyzeGaitForDementiaIndicators");
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  return {
-      gait_speed: 1.1 + (Math.random() * 0.4 - 0.2), // ~1.1 m/s
-      stride_length: 1.3 + (Math.random() * 0.3 - 0.15), // ~1.3 m
-      cadence: 110 + (Math.random() * 20 - 10), // ~110 steps/min
-      gait_variability: 0.03 + (Math.random() * 0.04 - 0.02), // ~3%
-      risk_probability: Math.random() * 0.6 + 0.1, // 10-70% risk
-      confidence: Math.random() * 0.3 + 0.7, // 70-100% confidence
-  };
+  return analyzeGaitForDementiaIndicatorsFlow(input);
 }
 
-/*
+
 const prompt = ai.definePrompt({
     name: 'analyzeGaitForDementiaIndicatorsPrompt',
     input: { schema: AnalyzeGaitForDementiaIndicatorsInputSchema },
@@ -76,4 +66,4 @@ const analyzeGaitForDementiaIndicatorsFlow = ai.defineFlow(
     return output!;
   }
 );
-*/
+
