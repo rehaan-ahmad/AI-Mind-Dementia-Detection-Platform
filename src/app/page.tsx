@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -26,7 +27,7 @@ import { patients } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, Users, AlertTriangle, ShieldCheck, HeartPulse } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 function getAvatarUrl(patient: Patient) {
@@ -48,6 +49,12 @@ function getRiskBadgeVariant(level: Patient['riskAssessment']['level']) {
 }
 
 export default function Dashboard() {
+
+    const totalPatients = patients.length;
+    const highRiskPatients = patients.filter(p => p.riskAssessment.level === 'High').length;
+    const mediumRiskPatients = patients.filter(p => p.riskAssessment.level === 'Medium').length;
+    const lowRiskPatients = patients.filter(p => p.riskAssessment.level === 'Low').length;
+
   return (
     <div className="space-y-8">
       <div>
@@ -56,6 +63,62 @@ export default function Dashboard() {
           Overview of all patients and their dementia risk assessments.
         </p>
       </div>
+
+       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Patients
+            </CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalPatients}</div>
+            <p className="text-xs text-muted-foreground">
+              All patients in the system
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              High-Risk
+            </CardTitle>
+            <AlertTriangle className="h-4 w-4 text-destructive" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{highRiskPatients}</div>
+            <p className="text-xs text-muted-foreground">
+                Patients requiring immediate attention
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Medium-Risk</CardTitle>
+            <HeartPulse className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{mediumRiskPatients}</div>
+            <p className="text-xs text-muted-foreground">
+              Patients requiring monitoring
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Low-Risk</CardTitle>
+             <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{lowRiskPatients}</div>
+            <p className="text-xs text-muted-foreground">
+              Patients with stable assessments
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle>Patient List</CardTitle>
