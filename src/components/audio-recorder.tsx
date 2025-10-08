@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -78,7 +79,11 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ mediaStream, isRecord
     return () => {
       cancelAnimationFrame(animationFrameId);
       source.disconnect();
-      audioContext.close();
+      // It's good practice to close the audio context, but be careful
+      // as it can affect other audio processing if shared.
+      if (audioContext.state !== 'closed') {
+        audioContext.close();
+      }
     };
   }, [mediaStream, isRecording]);
 
@@ -93,10 +98,11 @@ interface SpeechRecorderProps {
   maxDuration?: number; // in seconds
   instructions?: string;
   onError?: (error: string) => void;
+  disabled?: boolean;
 }
 
 
-export function AudioRecorder({ onRecordingComplete, maxDuration = 60, instructions, onError }: SpeechRecorderProps) {
+export function AudioRecorder({ onRecordingComplete, maxDuration = 60, instructions, onError, disabled = false }: SpeechRecorderProps) {
   const { toast } = useToast();
   const [hasMicPermission, setHasMicPermission] = React.useState(false);
   const [isRecording, setIsRecording] = React.useState(false);
@@ -219,7 +225,7 @@ export function AudioRecorder({ onRecordingComplete, maxDuration = 60, instructi
   }
 
   const resetRecording = () => {
-      stopRecording();
+      if(isRecording) stopRecording();
       setRecordedBlob(null);
       if(audioUrl) URL.revokeObjectURL(audioUrl);
       setAudioUrl(null);
@@ -231,17 +237,15 @@ export function AudioRecorder({ onRecordingComplete, maxDuration = 60, instructi
     if (!recordedBlob) return;
     setIsSubmitting(true);
     
-    // Pass blob and duration to parent
-    onRecordingComplete(recordedBlob, recordingTime);
-    
-    // Simulate an API call
-    await new Promise(res => setTimeout(res, 1500));
-    toast({
-        title: 'Assessment Submitted',
-        description: 'The speech recording has been saved for analysis.',
-    });
-    setIsSubmitting(false);
-    resetRecording();
+    try {
+        await onRecordingComplete(recordedBlob, recordingTime);
+    } catch (e) {
+        // Parent component is responsible for toasts on analysis errors
+    } finally {
+        setIsSubmitting(false);
+        // We can keep the recording for review even after submission
+        // resetRecording(); 
+    }
   };
 
   return (
@@ -271,17 +275,17 @@ export function AudioRecorder({ onRecordingComplete, maxDuration = 60, instructi
 
             <div className="flex items-center gap-2">
                 {!isRecording && !recordedBlob && (
-                    <Button onClick={startRecording} disabled={!hasMicPermission} size="lg" aria-label="Start recording">
+                    <Button onClick={startRecording} disabled={!hasMicPermission || disabled} size="lg" aria-label="Start recording">
                         <Mic className="mr-2 h-5 w-5" /> Start Recording
                     </Button>
                 )}
                 
                 {isRecording && (
                     <>
-                    <Button onClick={togglePauseResume} variant="secondary" size="icon" aria-label={isPaused ? 'Resume recording' : 'Pause recording'}>
+                    <Button onClick={togglePauseResume} variant="secondary" size="icon" aria-label={isPaused ? 'Resume recording' : 'Pause recording'} disabled={disabled}>
                        {isPaused ? <Play /> : <Pause />}
                     </Button>
-                     <Button onClick={stopRecording} variant="destructive" size="icon" aria-label="Stop recording">
+                     <Button onClick={stopRecording} variant="destructive" size="icon" aria-label="Stop recording" disabled={disabled}>
                         <Square />
                     </Button>
                     </>
@@ -297,13 +301,13 @@ export function AudioRecorder({ onRecordingComplete, maxDuration = 60, instructi
                 Your browser does not support the audio element.
             </audio>
             <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={resetRecording} disabled={isSubmitting} aria-label="Discard recording">
+                <Button variant="outline" onClick={resetRecording} disabled={isSubmitting || disabled} aria-label="Discard recording">
                     <Trash2 className="mr-2 h-4 w-4" />
                     Discard
                 </Button>
-                <Button onClick={handleSubmit} disabled={isSubmitting} aria-label="Save assessment">
-                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Save Assessment
+                <Button onClick={handleSubmit} disabled={isSubmitting || disabled} aria-label="Save assessment">
+                    {(isSubmitting || disabled) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Analyze Recording
                 </Button>
             </div>
         </Card>
