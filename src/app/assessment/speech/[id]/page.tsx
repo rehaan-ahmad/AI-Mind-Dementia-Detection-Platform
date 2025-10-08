@@ -16,7 +16,8 @@ import { Button } from '@/components/ui/button';
 import { patients } from '@/lib/data';
 import { ArrowLeft, Bot, Loader2 } from 'lucide-react';
 import { AudioRecorder } from '@/components/audio-recorder';
-import { analyzeSpeechForDementiaIndicators, type AnalyzeSpeechForDementiaIndicatorsOutput } from '@/ai/flows/analyze-speech-for-dementia-indicators';
+import { analyzeSpeechForDementiaIndicators } from '@/ai/flows/analyze-speech-for-dementia-indicators';
+import type { AnalyzeSpeechForDementiaIndicatorsOutput } from '@/ai/flows/speech.schemas';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 
