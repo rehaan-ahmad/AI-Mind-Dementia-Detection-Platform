@@ -187,4 +187,3 @@ export default async function ResultsDashboardPage({
     </div>
   );
 }
-
