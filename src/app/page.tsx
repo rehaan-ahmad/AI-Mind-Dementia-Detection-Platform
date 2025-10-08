@@ -1,4 +1,7 @@
 
+'use client';
+
+import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -23,12 +26,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import { patients } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Users, AlertTriangle, ShieldCheck, HeartPulse } from 'lucide-react';
+import { MoreHorizontal, Users, AlertTriangle, ShieldCheck, HeartPulse, ArrowUpDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+type SortKey = 'name' | 'age' | 'riskAssessment.level';
 
 function getAvatarUrl(patient: Patient) {
   const image = PlaceHolderImages.find((img) => img.id === patient.avatarId);
@@ -48,12 +54,63 @@ function getRiskBadgeVariant(level: Patient['riskAssessment']['level']) {
   }
 }
 
+const riskLevelOrder: { [key in Patient['riskAssessment']['level']]: number } = {
+    'High': 3,
+    'Medium': 2,
+    'Low': 1,
+};
+
+
 export default function Dashboard() {
+    const [filter, setFilter] = React.useState('');
+    const [sortKey, setSortKey] = React.useState<SortKey>('riskAssessment.level');
+    const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('desc');
 
     const totalPatients = patients.length;
     const highRiskPatients = patients.filter(p => p.riskAssessment.level === 'High').length;
     const mediumRiskPatients = patients.filter(p => p.riskAssessment.level === 'Medium').length;
     const lowRiskPatients = patients.filter(p => p.riskAssessment.level === 'Low').length;
+
+    const handleSort = (key: SortKey) => {
+        if (sortKey === key) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortKey(key);
+            setSortDirection('asc');
+        }
+    };
+
+    const sortedAndFilteredPatients = React.useMemo(() => {
+        return patients
+            .filter(patient => patient.name.toLowerCase().includes(filter.toLowerCase()))
+            .sort((a, b) => {
+                let aValue, bValue;
+
+                if (sortKey === 'riskAssessment.level') {
+                    aValue = riskLevelOrder[a.riskAssessment.level];
+                    bValue = riskLevelOrder[b.riskAssessment.level];
+                } else if (sortKey === 'age') {
+                    aValue = a.age;
+                    bValue = b.age;
+                } else { // name
+                    aValue = a.name;
+                    bValue = b.name;
+                }
+
+                if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+                if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+    }, [filter, sortKey, sortDirection]);
+
+    const SortableHeader = ({ sortKey: key, children }: { sortKey: SortKey, children: React.ReactNode }) => (
+        <TableHead>
+            <Button variant="ghost" onClick={() => handleSort(key)} className="px-2">
+                {children}
+                {sortKey === key && <ArrowUpDown className="ml-2 h-4 w-4" />}
+            </Button>
+        </TableHead>
+    );
 
   return (
     <div className="space-y-8">
@@ -121,10 +178,23 @@ export default function Dashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Patient List</CardTitle>
-          <CardDescription>
-            A list of all patients currently in the system.
-          </CardDescription>
+            <div className="flex flex-col sm:flex-row justify-between gap-4">
+                <div>
+                    <CardTitle>Patient List</CardTitle>
+                    <CardDescription>
+                        A list of all patients currently in the system.
+                    </CardDescription>
+                </div>
+                <div className="relative">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                        placeholder="Filter by name..." 
+                        className="pl-8 sm:w-[300px]"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                    />
+                </div>
+            </div>
         </CardHeader>
         <CardContent>
           <Table>
@@ -133,17 +203,17 @@ export default function Dashboard() {
                 <TableHead className="hidden w-[100px] sm:table-cell">
                   <span className="sr-only">Avatar</span>
                 </TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Age</TableHead>
+                <SortableHeader sortKey="name">Name</SortableHeader>
+                <SortableHeader sortKey="age">Age</SortableHeader>
                 <TableHead className="hidden md:table-cell">Gender</TableHead>
-                <TableHead>Risk Level</TableHead>
+                <SortableHeader sortKey="riskAssessment.level">Risk Level</SortableHeader>
                 <TableHead>
                   <span className="sr-only">Actions</span>
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {patients.map((patient) => (
+              {sortedAndFilteredPatients.map((patient) => (
                 <TableRow key={patient.id}>
                   <TableCell className="hidden sm:table-cell">
                     <Image
