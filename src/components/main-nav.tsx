@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard } from 'lucide-react';
+import { LayoutDashboard, Shield } from 'lucide-react';
 import {
   SidebarMenu,
   SidebarMenuItem,
@@ -19,6 +19,14 @@ export function MainNav() {
           <SidebarMenuButton isActive={pathname === '/'} tooltip="Dashboard">
             <LayoutDashboard />
             <span>Dashboard</span>
+          </SidebarMenuButton>
+        </Link>
+      </SidebarMenuItem>
+       <SidebarMenuItem>
+        <Link href="/admin">
+          <SidebarMenuButton isActive={pathname === '/admin'} tooltip="Admin Panel">
+            <Shield />
+            <span>Admin Panel</span>
           </SidebarMenuButton>
         </Link>
       </SidebarMenuItem>
