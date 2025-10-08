@@ -11,7 +11,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { patients } from '@/lib/data';
 import type { Patient } from '@/lib/types';
-import { ArrowLeft, Brain, Activity, MessageSquare, Footprints, Stethoscope, FileText, Scan, AlertTriangle, Info } from 'lucide-react';
+import { generateRecommendations } from '@/ai/flows/generate-recommendations';
+import { ArrowLeft, Brain, Activity, MessageSquare, Footprints, Stethoscope, FileText, Scan, AlertTriangle } from 'lucide-react';
 import { RiskFactorChart } from '@/components/risk-factor-chart';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -40,39 +41,21 @@ function getRiskBadgeVariant(level: Patient['riskAssessment']['level']) {
 
 // Mock data for modality scores - in a real app, this would come from the backend
 const modalityScores = [
-    { name: 'Cognitive', score: 75, icon: Brain },
-    { name: 'Functional', score: 85, icon: Activity },
-    { name: 'Speech', score: 60, icon: MessageSquare },
-    { name: 'Gait', score: 70, icon: Footprints },
+    { name: 'Cognitive Tests', score: 75, icon: FileText, description: "Based on MMSE, MoCA etc." },
+    { name: 'Functional Assessment', score: 85, icon: Activity, description: "ADLs & physical exam" },
+    { name: 'Speech Analysis', score: 60, icon: MessageSquare, description: "Result from AI assessment" },
+    { name: 'Gait Analysis', score: 70, icon: Footprints, description: "Result from AI assessment" },
 ];
 
-const recommendations = [
-    {
-        area: 'Cognitive Function',
-        recommendation: 'Recommend follow-up neuropsychological testing to further evaluate memory and executive function domains. Suggest patient engages in mentally stimulating activities.',
-        priority: 'High',
-        icon: FileText
-    },
-    {
-        area: 'Speech & Language',
-        recommendation: 'Consider referral to a speech-language pathologist for a comprehensive evaluation of word-finding difficulties.',
-        priority: 'Medium',
-        icon: MessageSquare
-    },
-    {
-        area: 'Physical Health',
-        recommendation: 'Continue monitoring blood pressure and hyperlipidemia. Encourage regular physical activity as tolerated.',
-        priority: 'Medium',
-        icon: Stethoscope
-    },
-    {
-        area: 'Imaging',
-        recommendation: 'A follow-up MRI in 12-18 months could be considered to monitor for any changes in cortical atrophy or white matter disease.',
-        priority: 'Low',
-        icon: Scan
-    }
-]
-
+const iconMap: { [key: string]: React.ElementType } = {
+    'Cognitive Function': Brain,
+    'Speech & Language': MessageSquare,
+    'Physical Health': Stethoscope,
+    'Imaging': Scan,
+    'Functional Assessment': Activity,
+    'Gait': Footprints,
+    'Default': AlertTriangle
+};
 
 export default async function ResultsDashboardPage({
   params,
@@ -85,6 +68,12 @@ export default async function ResultsDashboardPage({
     notFound();
   }
   
+  const [recommendationsResult] = await Promise.all([
+    generateRecommendations({
+        patientData: JSON.stringify(patient),
+    }),
+  ]);
+
   const riskBadgeVariant = getRiskBadgeVariant(patient.riskAssessment.level);
 
   return (
@@ -132,10 +121,13 @@ export default async function ResultsDashboardPage({
           <CardContent className="space-y-6">
             {modalityScores.map(modality => (
                 <div key={modality.name} className="space-y-2">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-start justify-between">
                         <div className="flex items-center gap-2">
-                            <modality.icon className="h-5 w-5 text-muted-foreground" />
-                            <p className="font-medium">{modality.name}</p>
+                            <modality.icon className="h-5 w-5 text-muted-foreground mt-1" />
+                            <div>
+                                <p className="font-medium">{modality.name}</p>
+                                <p className="text-xs text-muted-foreground">{modality.description}</p>
+                            </div>
                         </div>
                         <p className="font-mono text-sm">{modality.score}%</p>
                     </div>
@@ -166,20 +158,25 @@ export default async function ResultsDashboardPage({
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {recommendations.map(rec => (
-                    <TableRow key={rec.area}>
-                        <TableCell className="font-medium flex items-center gap-2">
-                            <rec.icon className="h-4 w-4 text-muted-foreground" />
-                            {rec.area}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">{rec.recommendation}</TableCell>
-                        <TableCell className="text-right">
-                             <Badge variant={rec.priority === 'High' ? 'destructive' : rec.priority === 'Medium' ? 'secondary' : 'outline'}>
-                                {rec.priority}
-                            </Badge>
-                        </TableCell>
-                    </TableRow>
-                    ))}
+                    {recommendationsResult.recommendations.map(rec => {
+                        const Icon = iconMap[rec.area] || iconMap['Default'];
+                        return (
+                            <TableRow key={rec.area}>
+                                <TableCell className="font-medium">
+                                    <div className="flex items-center gap-2">
+                                        <Icon className="h-4 w-4 text-muted-foreground" />
+                                        {rec.area}
+                                    </div>
+                                </TableCell>
+                                <TableCell className="text-muted-foreground">{rec.recommendation}</TableCell>
+                                <TableCell className="text-right">
+                                    <Badge variant={rec.priority === 'High' ? 'destructive' : rec.priority === 'Medium' ? 'secondary' : 'outline'}>
+                                        {rec.priority}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })}
                 </TableBody>
             </Table>
         </CardContent>
