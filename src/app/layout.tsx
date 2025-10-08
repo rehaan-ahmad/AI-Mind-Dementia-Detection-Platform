@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { BrainCircuit } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 import { Button } from '@/components/ui/button';
+import { AuthProvider } from '@/app/auth/auth-provider';
 
 export const metadata: Metadata = {
   title: 'AI-Mind Dementia Detection',
@@ -41,37 +42,39 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <SidebarProvider>
-          <Sidebar>
-            <SidebarHeader className="border-b">
-              <Link
-                href="/"
-                className="flex items-center gap-2 font-semibold"
-                aria-label="AI-Mind Home"
-              >
-                <BrainCircuit className="h-6 w-6 text-primary-foreground" />
-                <span className="text-lg text-primary-foreground">AI-Mind</span>
-              </Link>
-            </SidebarHeader>
-            <SidebarContent>
-              <MainNav />
-            </SidebarContent>
-            <SidebarFooter className="p-2">
-              <Button variant="outline" className="w-full">Help & Support</Button>
-            </SidebarFooter>
-          </Sidebar>
-          <SidebarInset>
-            <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6">
-              <SidebarTrigger className="md:hidden" />
-              <div className="flex-1" />
-              <Button asChild>
-                <Link href="/patients/new">Add New Patient</Link>
-              </Button>
-              <UserNav />
-            </header>
-            <main className="flex-1 p-4 md:p-8">{children}</main>
-          </SidebarInset>
-        </SidebarProvider>
+        <AuthProvider>
+          <SidebarProvider>
+            <Sidebar>
+              <SidebarHeader className="border-b">
+                <Link
+                  href="/"
+                  className="flex items-center gap-2 font-semibold"
+                  aria-label="AI-Mind Home"
+                >
+                  <BrainCircuit className="h-6 w-6 text-primary-foreground" />
+                  <span className="text-lg text-primary-foreground">AI-Mind</span>
+                </Link>
+              </SidebarHeader>
+              <SidebarContent>
+                <MainNav />
+              </SidebarContent>
+              <SidebarFooter className="p-2">
+                <Button variant="outline" className="w-full">Help & Support</Button>
+              </SidebarFooter>
+            </Sidebar>
+            <SidebarInset>
+              <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6">
+                <SidebarTrigger className="md:hidden" />
+                <div className="flex-1" />
+                <Button asChild>
+                  <Link href="/patients/new">Add New Patient</Link>
+                </Button>
+                <UserNav />
+              </header>
+              <main className="flex-1 p-4 md:p-8">{children}</main>
+            </SidebarInset>
+          </SidebarProvider>
+        </AuthProvider>
         <Toaster />
       </body>
     </html>

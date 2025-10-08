@@ -8,9 +8,11 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
+import { useAuth } from '@/app/auth/auth-provider';
 
 export function MainNav() {
   const pathname = usePathname();
+  const { user } = useAuth();
 
   return (
     <SidebarMenu>
@@ -22,14 +24,16 @@ export function MainNav() {
           </SidebarMenuButton>
         </Link>
       </SidebarMenuItem>
-       <SidebarMenuItem>
-        <Link href="/admin">
-          <SidebarMenuButton isActive={pathname === '/admin'} tooltip="Admin Panel">
-            <Shield />
-            <span>Admin Panel</span>
-          </SidebarMenuButton>
-        </Link>
-      </SidebarMenuItem>
+      {user?.role === 'admin' && (
+        <SidebarMenuItem>
+          <Link href="/admin">
+            <SidebarMenuButton isActive={pathname === '/admin'} tooltip="Admin Panel">
+              <Shield />
+              <span>Admin Panel</span>
+            </SidebarMenuButton>
+          </Link>
+        </SidebarMenuItem>
+      )}
     </SidebarMenu>
   );
 }
