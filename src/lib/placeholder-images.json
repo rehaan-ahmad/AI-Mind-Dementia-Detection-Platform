@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "avatar1",
+      "description": "Avatar of an elderly man",
+      "imageUrl": "https://picsum.photos/seed/avatar1/100/100",
+      "imageHint": "elderly man"
+    },
+    {
+      "id": "avatar2",
+      "description": "Avatar of an elderly woman",
+      "imageUrl": "https://picsum.photos/seed/avatar2/100/100",
+      "imageHint": "elderly woman"
+    },
+    {
+      "id": "avatar3",
+      "description": "Avatar of a person",
+      "imageUrl": "https://picsum.photos/seed/avatar3/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "user-avatar",
+      "description": "Avatar for the logged in user",
+      "imageUrl": "https://picsum.photos/seed/user-avatar/100/100",
+      "imageHint": "doctor portrait"
+    },
+    {
+      "id": "mri-scan-1",
+      "description": "Placeholder for an MRI scan image",
+      "imageUrl": "https://picsum.photos/seed/mri1/600/450",
+      "imageHint": "MRI brain"
+    },
+    {
+      "id": "mri-scan-2",
+      "description": "Placeholder for another MRI scan image",
+      "imageUrl": "https://picsum.photos/seed/mri2/600/450",
+      "imageHint": "brain scan"
+    },
+    {
+      "id": "mri-scan-3",
+      "description": "Placeholder for a third MRI scan image",
+      "imageUrl": "https://picsum.photos/seed/mri3/600/450",
+      "imageHint": "medical scan"
+    }
+  ]
 }
