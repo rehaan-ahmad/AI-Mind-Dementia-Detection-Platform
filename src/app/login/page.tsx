@@ -3,7 +3,6 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,9 +16,28 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BrainCircuit, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/app/auth/auth-provider';
+
+// This is our mock user. We can change the role here to test different access levels.
+// e.g., change 'admin' to 'healthcare_provider' to see the Admin Panel link disappear.
+const mockUser = {
+  uid: 'user-mock-123',
+  email: 'e.reed@aimind-health.com',
+  displayName: 'Dr. Evelyn Reed',
+  role: 'admin' as const, // <-- CHANGE THIS TO 'healthcare_provider' TO HIDE ADMIN LINK
+  permissions: [
+    'admin:all',
+    'user:create',
+    'user:read',
+    'user:update',
+    'user:delete',
+    'system:configure',
+    'audit:read'
+  ]
+};
 
 export default function LoginPage() {
-  const router = useRouter();
+  const { login } = useAuth();
   const { toast } = useToast();
   const [step, setStep] = React.useState<'credentials' | 'otp'>('credentials');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -50,7 +68,8 @@ export default function LoginPage() {
         title: 'Login Successful',
         description: 'Welcome back, Dr. Reed!',
       });
-      router.push('/dashboard');
+      login(mockUser);
+      // The login function will handle the redirect
     }, 1500);
   };
 

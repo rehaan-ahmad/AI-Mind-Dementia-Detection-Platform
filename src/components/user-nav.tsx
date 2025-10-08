@@ -12,9 +12,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useAuth } from '@/app/auth/auth-provider';
 
 export function UserNav() {
+  const { user, logout } = useAuth();
   const userAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <DropdownMenu>
@@ -26,16 +32,16 @@ export function UserNav() {
               alt="User avatar"
               data-ai-hint={userAvatar?.imageHint}
             />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarFallback>ER</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Dr. Evelyn Reed</p>
+            <p className="text-sm font-medium leading-none">{user.displayName}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              e.reed@aimind-health.com
+              {user.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -50,7 +56,7 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => logout()}>
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

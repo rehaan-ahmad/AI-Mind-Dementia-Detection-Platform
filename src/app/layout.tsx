@@ -14,7 +14,7 @@ import {
 import { UserNav } from '@/components/user-nav';
 import { MainNav } from '@/components/main-nav';
 import Link from 'next/link';
-import { BrainCircuit } from 'lucide-react';
+import { BrainCircuit, Loader2 } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 import { Button } from '@/components/ui/button';
 import { AuthProvider, useAuth } from '@/app/auth/auth-provider';
@@ -26,16 +26,21 @@ function AppLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   
-  if (pathname === '/') {
-    return <>{children}</>;
+  const publicRoutes = ['/', '/login'];
+  const isPublicRoute = publicRoutes.includes(pathname);
+
+  if (loading) {
+    return (
+        <div className="flex items-center justify-center min-h-screen">
+            <Loader2 className="h-10 w-10 animate-spin" />
+        </div>
+    )
   }
   
-  if (!user) {
-    // In a real app, you'd redirect to a login page.
-    // For this mock, we show the main app layout.
-    // You can also add a login page and redirect here.
+  if (isPublicRoute || !user) {
+    return <>{children}</>;
   }
 
   return (

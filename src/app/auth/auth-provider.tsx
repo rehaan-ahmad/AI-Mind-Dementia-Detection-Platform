@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 
 // As per your spec, defining user roles and permissions.
 // This is a mock and is not connected to a database.
@@ -17,6 +18,8 @@ interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  login: (user: User) => void;
+  logout: () => void;
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -40,15 +43,37 @@ const mockUser: User = {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<User | null>(mockUser);
-  const [loading, setLoading] = React.useState(false);
+  const router = useRouter();
+  const [user, setUser] = React.useState<User | null>(null);
+  const [loading, setLoading] = React.useState(true); // Start with loading true
 
   // In a real app, you would have a useEffect here to check for a Firebase session.
-  // For this mock, we just set the user directly.
+  React.useEffect(() => {
+    // Simulate checking for an existing session
+    const session = sessionStorage.getItem('aimind-user');
+    if (session) {
+      setUser(JSON.parse(session));
+    }
+    setLoading(false);
+  }, []);
+
+  const login = (userData: User) => {
+    sessionStorage.setItem('aimind-user', JSON.stringify(userData));
+    setUser(userData);
+    router.push('/dashboard');
+  };
+
+  const logout = () => {
+    sessionStorage.removeItem('aimind-user');
+    setUser(null);
+    router.push('/login');
+  };
 
   const value = {
     user,
     loading,
+    login,
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
