@@ -21,7 +21,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { generateInitialPatientSummary } from '@/ai/flows/generate-initial-patient-summary';
 import { explainRiskAssessmentRationale } from '@/ai/flows/explain-risk-assessment-rationale';
-import { ArrowLeft, Bot, FileText, History, Scan, Stethoscope } from 'lucide-react';
+import { ArrowLeft, Bot, FileText, History, Scan, Stethoscope, Mic } from 'lucide-react';
 import { RiskVisualization } from '@/components/risk-visualization';
 import { Badge } from '@/components/ui/badge';
 
@@ -70,19 +70,27 @@ export default async function PatientDetailPage({
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <Button variant="outline" size="icon" asChild>
-          <Link href="/">
-            <ArrowLeft className="h-4 w-4" />
-            <span className="sr-only">Back to Dashboard</span>
-          </Link>
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{patient.name}</h1>
-          <p className="text-muted-foreground">
-            Age: {patient.age} | Gender: {patient.gender}
-          </p>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+            <Button variant="outline" size="icon" asChild>
+            <Link href="/">
+                <ArrowLeft className="h-4 w-4" />
+                <span className="sr-only">Back to Dashboard</span>
+            </Link>
+            </Button>
+            <div>
+            <h1 className="text-3xl font-bold tracking-tight">{patient.name}</h1>
+            <p className="text-muted-foreground">
+                Age: {patient.age} | Gender: {patient.gender}
+            </p>
+            </div>
         </div>
+        <Button asChild>
+            <Link href={`/assessment/speech/${patient.id}`}>
+                <Mic className="mr-2 h-4 w-4" />
+                Start Speech Assessment
+            </Link>
+        </Button>
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
