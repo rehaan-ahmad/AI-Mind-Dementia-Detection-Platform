@@ -1,4 +1,5 @@
 
+
 import {
   Card,
   CardContent,
@@ -16,7 +17,8 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Users, FileText, BarChart2, Clock, CheckCircle, AlertTriangle, UserPlus, FileUp } from 'lucide-react';
+import { Users, FileText, BarChart2, CheckCircle, AlertTriangle, UserPlus, FileUp } from 'lucide-react';
+import { AssessmentTrendsChart } from '@/components/assessment-trends-chart';
 
 const overviewMetrics = [
     { title: 'Total Patients', value: '1,247', icon: Users, change: '+12 since last month' },
@@ -70,10 +72,10 @@ export default function AdminPage() {
         <Card className="lg:col-span-4">
             <CardHeader>
                 <CardTitle>Assessment Trends</CardTitle>
-                <CardDescription>Daily/Weekly/Monthly assessment volumes.</CardDescription>
+                <CardDescription>Daily assessment volumes over the last week.</CardDescription>
             </CardHeader>
-            <CardContent className="flex items-center justify-center h-80 bg-muted rounded-lg">
-                <p className="text-muted-foreground">[Line Chart Placeholder]</p>
+            <CardContent>
+                <AssessmentTrendsChart />
             </CardContent>
         </Card>
          <Card className="lg:col-span-3">
@@ -90,7 +92,7 @@ export default function AdminPage() {
                                 <Icon className="h-5 w-5 text-muted-foreground" />
                             </div>
                             <div>
-                                <div className="text-sm font-medium">{activity.type} <Badge variant={activity.variant as any} className="ml-2">{activity.variant}</Badge></div>
+                                <div className="text-sm font-medium">{activity.type}</div>
                                 <p className="text-sm text-muted-foreground">{activity.description}</p>
                                 <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
                             </div>
