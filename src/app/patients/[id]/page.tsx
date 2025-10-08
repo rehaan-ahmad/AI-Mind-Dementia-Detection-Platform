@@ -16,14 +16,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { patients } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { generateInitialPatientSummary } from '@/ai/flows/generate-initial-patient-summary';
 import { explainRiskAssessmentRationale } from '@/ai/flows/explain-risk-assessment-rationale';
-import { ArrowLeft, Bot, FileText, History, Scan, Stethoscope, Mic, Footprints, BookOpen, Users, Pill, Activity, BarChart3 } from 'lucide-react';
+import { ArrowLeft, Bot, History, Scan, Stethoscope, Mic, Footprints, BookOpen, Users, Pill, Activity, BarChart3 } from 'lucide-react';
 import { RiskVisualization } from '@/components/risk-visualization';
 import { Badge } from '@/components/ui/badge';
 
@@ -163,7 +162,7 @@ export default async function PatientDetailPage({
           <CardTitle>Clinical Data Record</CardTitle>
           <CardDescription>
             Detailed information from the patient's record.
-          </description>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Accordion type="single" collapsible defaultValue="item-1">
