@@ -12,4 +12,9 @@ export type Patient = {
     level: 'Low' | 'Medium' | 'High';
     score: number;
   };
+  educationLevel: string;
+  familyHistory: string;
+  medications: string;
+  activitiesOfDailyLiving: string;
+  physicalExamNotes: string;
 };

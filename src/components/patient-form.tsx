@@ -27,6 +27,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import * as React from 'react';
+import { Separator } from './ui/separator';
 
 const patientFormSchema = z.object({
   name: z.string().min(2, {
@@ -34,9 +35,14 @@ const patientFormSchema = z.object({
   }),
   age: z.coerce.number().min(0).max(120),
   gender: z.enum(['Male', 'Female', 'Other']),
+  educationLevel: z.string().min(1, { message: 'Education level is required.' }),
+  familyHistory: z.string().optional(),
+  medications: z.string().optional(),
   patientHistory: z.string().min(10, {
     message: 'Patient history must be at least 10 characters.',
   }),
+  activitiesOfDailyLiving: z.string().min(10, { message: 'ADL information is required.' }),
+  physicalExamNotes: z.string().min(10, { message: 'Physical exam notes are required.' }),
   cognitiveTestResults: z.string().min(10, {
     message: 'Cognitive test results must be at least 10 characters.',
   }),
@@ -58,7 +64,12 @@ export function PatientForm() {
       name: '',
       age: 70,
       gender: 'Male',
+      educationLevel: '',
+      familyHistory: '',
+      medications: '',
       patientHistory: '',
+      activitiesOfDailyLiving: '',
+      physicalExamNotes: '',
       cognitiveTestResults: '',
       mriScanSummary: '',
     },
@@ -87,114 +98,216 @@ export function PatientForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem className="md:col-span-2">
-                <FormLabel>Patient Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="John Doe" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="age"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Age</FormLabel>
-                <FormControl>
-                  <Input type="number" placeholder="75" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="space-y-4">
+            <h3 className="text-lg font-medium">Demographics</h3>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                    <FormLabel>Patient Name</FormLabel>
+                    <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="age"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Age</FormLabel>
+                    <FormControl>
+                    <Input type="number" placeholder="75" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            </div>
+
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Gender</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+                <FormField
+                    control={form.control}
+                    name="educationLevel"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Education Level</FormLabel>
+                        <FormControl>
+                        <Input placeholder="e.g., 16 years, Bachelor's Degree" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+            </div>
         </div>
 
-        <FormField
-          control={form.control}
-          name="gender"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Gender</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select gender" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="Male">Male</SelectItem>
-                  <SelectItem value="Female">Female</SelectItem>
-                  <SelectItem value="Other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Separator />
+        
+        <div className="space-y-4">
+            <h3 className="text-lg font-medium">Clinical History</h3>
+            <FormField
+                control={form.control}
+                name="patientHistory"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Chief Complaint & Patient History</FormLabel>
+                    <FormControl>
+                        <Textarea
+                        placeholder="Describe the patient's primary complaint and relevant medical history..."
+                        className="min-h-[100px]"
+                        {...field}
+                        />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+              control={form.control}
+              name="familyHistory"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Family History</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Note any family history of dementia or other neurological disorders..."
+                      className="min-h-[80px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="medications"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Current Medications</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="List all current medications and dosages..."
+                      className="min-h-[80px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+        </div>
 
-        <FormField
-          control={form.control}
-          name="patientHistory"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Patient History</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Describe the patient's relevant medical history..."
-                  className="min-h-[100px]"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Separator />
 
-        <FormField
-          control={form.control}
-          name="cognitiveTestResults"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cognitive Test Results</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Enter results from MMSE, MoCA, etc."
-                  className="min-h-[100px]"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="space-y-4">
+            <h3 className="text-lg font-medium">Functional & Physical Assessment</h3>
+            <FormField
+              control={form.control}
+              name="activitiesOfDailyLiving"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Activities of Daily Living (ADLs)</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe the patient's ability to perform daily tasks (e.g., bathing, dressing, finances)..."
+                      className="min-h-[100px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="physicalExamNotes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Physical Exam Notes</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Enter key findings from the physical and neurological exam..."
+                      className="min-h-[100px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+        </div>
 
-        <FormField
-          control={form.control}
-          name="mriScanSummary"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>MRI Scan Summary</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Summarize key findings from the MRI report."
-                  className="min-h-[100px]"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                AI will use this summary to help form the risk assessment.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Separator />
+
+        <div className="space-y-4">
+            <h3 className="text-lg font-medium">Diagnostics</h3>
+            <FormField
+                control={form.control}
+                name="cognitiveTestResults"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Cognitive Test Results</FormLabel>
+                    <FormControl>
+                        <Textarea
+                        placeholder="Enter results from MMSE, MoCA, etc."
+                        className="min-h-[100px]"
+                        {...field}
+                        />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            <FormField
+                control={form.control}
+                name="mriScanSummary"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>MRI Scan Summary</FormLabel>
+                    <FormControl>
+                        <Textarea
+                        placeholder="Summarize key findings from the MRI report."
+                        className="min-h-[100px]"
+                        {...field}
+                        />
+                    </FormControl>
+                    <FormDescription>
+                        AI will use this summary to help form the risk assessment.
+                    </FormDescription>
+                    <FormMessage />
+                    </FormItem>
+                )}
+            />
+        </div>
 
         <div className="flex justify-end">
           <Button type="submit" disabled={isSubmitting}>

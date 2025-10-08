@@ -22,7 +22,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { generateInitialPatientSummary } from '@/ai/flows/generate-initial-patient-summary';
 import { explainRiskAssessmentRationale } from '@/ai/flows/explain-risk-assessment-rationale';
-import { ArrowLeft, Bot, FileText, History, Scan, Stethoscope, Mic, Footprints } from 'lucide-react';
+import { ArrowLeft, Bot, FileText, History, Scan, Stethoscope, Mic, Footprints, BookOpen, Users, Pill, Activity } from 'lucide-react';
 import { RiskVisualization } from '@/components/risk-visualization';
 import { Badge } from '@/components/ui/badge';
 
@@ -82,7 +82,7 @@ export default async function PatientDetailPage({
             <div>
             <h1 className="text-3xl font-bold tracking-tight">{patient.name}</h1>
             <p className="text-muted-foreground">
-                Age: {patient.age} | Gender: {patient.gender}
+                Age: {patient.age} | Gender: {patient.gender} | Education: {patient.educationLevel}
             </p>
             </div>
         </div>
@@ -153,14 +153,64 @@ export default async function PatientDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Patient Data</CardTitle>
+          <CardTitle>Clinical Data Record</CardTitle>
           <CardDescription>
             Detailed information from the patient's record.
           </description>
         </CardHeader>
         <CardContent>
           <Accordion type="single" collapsible defaultValue="item-1">
-            <AccordionItem value="item-1">
+             <AccordionItem value="item-1">
+              <AccordionTrigger className="text-base font-semibold">
+                <div className="flex items-center gap-2">
+                  <History className="h-5 w-5" />
+                  <span>Clinical History</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="space-y-4 pt-4">
+                <div>
+                  <h4 className="font-semibold flex items-center gap-2"><Users className="h-4 w-4 text-muted-foreground"/> Family History</h4>
+                  <p className="mt-1 text-sm text-muted-foreground pl-6">
+                    {patient.familyHistory || 'Not provided.'}
+                  </p>
+                </div>
+                 <div>
+                  <h4 className="font-semibold flex items-center gap-2"><Pill className="h-4 w-4 text-muted-foreground"/> Current Medications</h4>
+                  <p className="mt-1 text-sm text-muted-foreground pl-6">
+                    {patient.medications || 'None.'}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold">Patient Medical History</h4>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {patient.patientHistory}
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="text-base font-semibold">
+                <div className="flex items-center gap-2">
+                  <Stethoscope className="h-5 w-5" />
+                  <span>Functional & Physical Assessment</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="space-y-4 pt-4">
+                 <div>
+                  <h4 className="font-semibold flex items-center gap-2"><Activity className="h-4 w-4 text-muted-foreground"/> Activities of Daily Living (ADLs)</h4>
+                  <p className="mt-1 text-sm text-muted-foreground pl-6">
+                    {patient.activitiesOfDailyLiving}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold">Physical Exam Notes</h4>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {patient.physicalExamNotes}
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
               <AccordionTrigger className="text-base font-semibold">
                 <div className="flex items-center gap-2">
                   <Scan className="h-5 w-5" />
@@ -186,7 +236,7 @@ export default async function PatientDetailPage({
                 )}
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="item-2">
+            <AccordionItem value="item-4">
               <AccordionTrigger className="text-base font-semibold">
                 <div className="flex items-center gap-2">
                   <FileText className="h-5 w-5" />
@@ -196,19 +246,6 @@ export default async function PatientDetailPage({
               <AccordionContent className="pt-4">
                 <p className="text-sm text-muted-foreground">
                   {patient.cognitiveTestResults}
-                </p>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3">
-              <AccordionTrigger className="text-base font-semibold">
-                <div className="flex items-center gap-2">
-                  <History className="h-5 w-5" />
-                  <span>Patient History</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="pt-4">
-                <p className="text-sm text-muted-foreground">
-                  {patient.patientHistory}
                 </p>
               </AccordionContent>
             </AccordionItem>
