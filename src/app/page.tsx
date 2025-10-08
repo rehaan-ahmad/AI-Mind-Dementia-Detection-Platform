@@ -12,7 +12,7 @@ export default function LandingPage() {
           <BrainCircuit className="h-6 w-6 text-primary" />
           <span className="ml-2 text-lg font-semibold">AI-Mind</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
+        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
           <Link
             href="/dashboard"
             className="text-sm font-medium hover:underline underline-offset-4"
