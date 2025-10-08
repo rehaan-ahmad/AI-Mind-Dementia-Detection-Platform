@@ -26,13 +26,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
-import { patients } from '@/lib/data';
+import { patients as initialPatients } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Users, AlertTriangle, ShieldCheck, HeartPulse, ArrowUpDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 type SortKey = 'name' | 'age' | 'riskAssessment.level';
 
@@ -61,7 +73,7 @@ const riskLevelOrder: { [key in Patient['riskAssessment']['level']]: number } = 
 };
 
 
-const PatientRow = React.memo(({ patient }: { patient: Patient }) => {
+const PatientRow = React.memo(({ patient, onDelete }: { patient: Patient, onDelete: (patientId: string) => void }) => {
     return (
         <TableRow>
             <TableCell className="hidden sm:table-cell">
@@ -85,27 +97,44 @@ const PatientRow = React.memo(({ patient }: { patient: Patient }) => {
             </Badge>
             </TableCell>
             <TableCell>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                <Button
-                    aria-haspopup="true"
-                    size="icon"
-                    variant="ghost"
-                >
-                    <MoreHorizontal className="h-4 w-4" />
-                    <span className="sr-only">Toggle menu</span>
-                </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                    <Link href={`/patients/${patient.id}`}>View Details</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem className="text-destructive focus:text-destructive">
-                    Delete
-                </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+             <AlertDialog>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                    <Button
+                        aria-haspopup="true"
+                        size="icon"
+                        variant="ghost"
+                    >
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">Toggle menu</span>
+                    </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                        <Link href={`/patients/${patient.id}`}>View Details</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <AlertDialogTrigger asChild>
+                        <DropdownMenuItem className="text-destructive focus:text-destructive">
+                            Delete
+                        </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete this
+                        patient's data from our servers.
+                    </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => onDelete(patient.id)}>Continue</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
             </TableCell>
         </TableRow>
     );
@@ -114,6 +143,8 @@ PatientRow.displayName = 'PatientRow';
 
 
 export default function Dashboard() {
+    const { toast } = useToast();
+    const [patients, setPatients] = React.useState<Patient[]>(initialPatients);
     const [filter, setFilter] = React.useState('');
     const [sortKey, setSortKey] = React.useState<SortKey>('riskAssessment.level');
     const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('desc');
@@ -130,6 +161,14 @@ export default function Dashboard() {
             setSortKey(key);
             setSortDirection('asc');
         }
+    };
+    
+    const handleDeletePatient = (patientId: string) => {
+        setPatients(prevPatients => prevPatients.filter(p => p.id !== patientId));
+        toast({
+            title: 'Patient Deleted',
+            description: 'The patient has been removed from the list (mock).',
+        })
     };
 
     const sortedAndFilteredPatients = React.useMemo(() => {
@@ -153,7 +192,7 @@ export default function Dashboard() {
                 if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
                 return 0;
             });
-    }, [filter, sortKey, sortDirection]);
+    }, [patients, filter, sortKey, sortDirection]);
 
     const SortableHeader = ({ sortKey: key, children }: { sortKey: SortKey, children: React.ReactNode }) => (
         <TableHead>
@@ -266,7 +305,7 @@ export default function Dashboard() {
             </TableHeader>
             <TableBody>
               {sortedAndFilteredPatients.map((patient) => (
-                <PatientRow key={patient.id} patient={patient} />
+                <PatientRow key={patient.id} patient={patient} onDelete={handleDeletePatient} />
               ))}
             </TableBody>
           </Table>
