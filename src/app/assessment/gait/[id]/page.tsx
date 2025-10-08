@@ -23,7 +23,7 @@ import { patients } from '@/lib/data';
 import { ArrowLeft, Video, Square, Loader2, Info } from 'lucide-react';
 
 export default function GaitAssessmentPage({ params }: { params: { id: string } }) {
-  const patientId = params.id;
+  const patientId = React.useMemo(() => params.id, [params.id]);
   const patient = React.useMemo(() => patients.find((p) => p.id === patientId), [patientId]);
   const { toast } = useToast();
 
@@ -150,4 +150,3 @@ export default function GaitAssessmentPage({ params }: { params: { id: string } 
     </div>
   );
 }
-
