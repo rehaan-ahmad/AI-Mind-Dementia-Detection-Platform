@@ -22,7 +22,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { generateInitialPatientSummary } from '@/ai/flows/generate-initial-patient-summary';
 import { explainRiskAssessmentRationale } from '@/ai/flows/explain-risk-assessment-rationale';
-import { ArrowLeft, Bot, History, Scan, Stethoscope, Mic, Footprints, BookOpen, Users, Pill, Activity, BarChart3 } from 'lucide-react';
+import { ArrowLeft, Bot, History, Scan, Stethoscope, Mic, Footprints, BookOpen, Users, Pill, Activity, BarChart3, FileText } from 'lucide-react';
 import { RiskVisualization } from '@/components/risk-visualization';
 import { Badge } from '@/components/ui/badge';
 
