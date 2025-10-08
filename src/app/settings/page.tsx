@@ -14,6 +14,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function SettingsPage() {
   return (
@@ -98,6 +109,74 @@ export default function SettingsPage() {
         </CardContent>
          <CardFooter>
           <Button>Save Preferences</Button>
+        </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Data & Privacy</CardTitle>
+          <CardDescription>
+            Manage your data, privacy settings, and consent options.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+            <div>
+              <h4 className="font-medium mb-2">Consent Management</h4>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div>
+                    <Label htmlFor="consent-collection" className="font-medium">Data Collection</Label>
+                    <p className="text-sm text-muted-foreground">Allow collection of clinical data for assessment.</p>
+                  </div>
+                  <Switch id="consent-collection" defaultChecked disabled />
+                </div>
+                 <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div>
+                    <Label htmlFor="consent-ai" className="font-medium">AI Analysis</Label>
+                    <p className="text-sm text-muted-foreground">Allow AI models to process data for risk assessment.</p>
+                  </div>
+                  <Switch id="consent-ai" defaultChecked />
+                </div>
+                 <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div>
+                    <Label htmlFor="consent-research" className="font-medium">Research Participation</Label>
+                    <p className="text-sm text-muted-foreground">Allow anonymized data to be used for research.</p>
+                  </div>
+                  <Switch id="consent-research" />
+                </div>
+              </div>
+            </div>
+            <Separator />
+            <div>
+                <h4 className="font-medium mb-2">Data Management</h4>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <Button variant="outline" className="w-full sm:w-auto">Export My Data</Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" className="w-full sm:w-auto">Delete My Account</Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete your
+                            account and remove all your data from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction>Continue</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                </div>
+                 <p className="text-xs text-muted-foreground mt-2">
+                    Request an export of your data or the deletion of your account.
+                 </p>
+            </div>
+        </CardContent>
+         <CardFooter>
+          <Button>Save Privacy Settings</Button>
         </CardFooter>
       </Card>
     </div>
