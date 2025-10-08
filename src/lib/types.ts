@@ -1,3 +1,10 @@
+export type TimelineEvent = {
+  date: string;
+  title: string;
+  description: string;
+  icon: 'Stethoscope' | 'FileText' | 'Scan' | 'Pill' | 'AlertTriangle';
+};
+
 export type Patient = {
   id: string;
   name: string;
@@ -17,4 +24,5 @@ export type Patient = {
   medications: string;
   activitiesOfDailyLiving: string;
   physicalExamNotes: string;
+  timeline: TimelineEvent[];
 };

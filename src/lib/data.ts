@@ -23,6 +23,14 @@ export const patients: Patient[] = [
     medications: 'Lisinopril, Atorvastatin',
     activitiesOfDailyLiving: 'Independent with all ADLs, but has difficulty managing finances.',
     physicalExamNotes: 'BP 135/85 mmHg, HR 70 bpm. Neurological exam unremarkable except for mild symmetric reflex diminution.',
+    timeline: [
+        { date: '2022-10-15', title: 'Initial Consultation', description: 'Patient and wife presented with concerns about memory decline. Reported word-finding issues and misplacing items.', icon: 'Stethoscope' },
+        { date: '2022-11-01', title: 'Cognitive Testing (MMSE)', description: 'Scored 24/30. Showed deficits in delayed recall and attention.', icon: 'FileText' },
+        { date: '2022-11-20', title: 'MRI of the Brain', description: 'Mild cortical atrophy noted, consistent with age. No acute findings.', icon: 'Scan' },
+        { date: '2023-01-10', title: 'Medication Adjustment', description: 'Lisinopril dosage adjusted to better control blood pressure.', icon: 'Pill' },
+        { date: '2023-05-22', title: 'Follow-up Visit', description: 'Family reports increased irritability and difficulty with financial management.', icon: 'Stethoscope'},
+        { date: '2023-11-05', title: 'Risk Assessment Generated', description: 'AI-Mind platform calculated a 68% risk score, classified as Medium.', icon: 'AlertTriangle' }
+    ]
   },
   {
     id: 'pat_2',
@@ -46,6 +54,12 @@ export const patients: Patient[] = [
     medications: 'None',
     activitiesOfDailyLiving: 'Fully independent in all ADLs and IADLs.',
     physicalExamNotes: 'BP 120/75 mmHg, HR 65 bpm. Normal neurological exam.',
+    timeline: [
+        { date: '2023-03-10', title: 'Baseline Wellness Visit', description: 'Patient requested a baseline cognitive and physical check-up due to family history.', icon: 'Stethoscope' },
+        { date: '2023-03-25', title: 'Cognitive Testing (MMSE)', description: 'Scored 28/30. Excellent performance overall, minor dip in one executive function sub-task.', icon: 'FileText' },
+        { date: '2023-04-12', title: 'MRI of the Brain', description: 'Scan showed normal, age-appropriate brain volume.', icon: 'Scan' },
+        { date: '2023-04-20', title: 'Risk Assessment Generated', description: 'AI-Mind platform calculated a 22% risk score, classified as Low.', icon: 'AlertTriangle' }
+    ]
   },
   {
     id: 'pat_3',
@@ -69,5 +83,15 @@ export const patients: Patient[] = [
     medications: 'Metformin, Insulin, Clopidogrel',
     activitiesOfDailyLiving: 'Requires assistance with bathing, dressing, and managing medications. Cannot handle finances.',
     physicalExamNotes: 'BP 140/90 mmHg. Right-sided pronator drift and subtle gait instability noted.',
+    timeline: [
+        { date: '2021-08-01', title: 'Post-Stroke Follow-up', description: 'Follow-up after minor stroke. Some residual right-sided weakness.', icon: 'Stethoscope' },
+        { date: '2022-06-15', title: 'Family Concern', description: 'Daughter called to report increasing confusion and memory problems.', icon: 'Stethoscope' },
+        { date: '2022-07-10', title: 'Cognitive Testing (MMSE)', description: 'Scored 22/30. Deficits noted in memory and orientation.', icon: 'FileText' },
+        { date: '2023-02-20', title: 'Hospitalization for Fall', description: 'Patient had an unwitnessed fall at home, no major injuries.', icon: 'AlertTriangle' },
+        { date: '2023-03-05', title: 'In-depth Assessment', description: 'Brought to clinic by daughter for full workup due to rapid functional decline.', icon: 'Stethoscope' },
+        { date: '2023-03-15', title: 'MRI of the Brain', description: 'Significant atrophy and white matter disease observed.', icon: 'Scan' },
+        { date: '2023-04-02', title: 'Cognitive Retest (MMSE)', description: 'Score dropped to 19/30. Worsening visuospatial function.', icon: 'FileText' },
+        { date: '2023-04-10', title: 'Risk Assessment Generated', description: 'AI-Mind platform calculated a 91% risk score, classified as High.', icon: 'AlertTriangle' }
+    ]
   },
 ];

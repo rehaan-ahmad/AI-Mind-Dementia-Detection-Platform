@@ -8,6 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter
 } from '@/components/ui/card';
 import {
   Accordion,
@@ -257,6 +258,14 @@ export default async function PatientDetailPage({
             </AccordionItem>
           </Accordion>
         </CardContent>
+        <CardFooter className="flex justify-end">
+            <Button asChild>
+                <Link href={`/history/${patient.id}`}>
+                    <History className="mr-2 h-4 w-4" />
+                    View Full History Timeline
+                </Link>
+            </Button>
+        </CardFooter>
       </Card>
     </div>
   );
