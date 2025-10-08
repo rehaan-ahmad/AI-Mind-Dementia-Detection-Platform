@@ -30,27 +30,30 @@ export const AnalyzeGaitForDementiaIndicatorsOutputSchema = z.object({
 export type AnalyzeGaitForDementiaIndicatorsOutput = z.infer<typeof AnalyzeGaitForDementiaIndicatorsOutputSchema>;
 
 export async function analyzeGaitForDementiaIndicators(input: AnalyzeGaitForDementiaIndicatorsInput): Promise<AnalyzeGaitForDementiaIndicatorsOutput> {
-  // This is a mock implementation. In a real-world scenario, this would
-  // involve complex video processing and a trained ML model.
-  console.log('Received video data for gait analysis (mock).');
-
-  // Simulate processing delay
-  await new Promise(resolve => setTimeout(resolve, 2500));
-
-  // Return mock data that matches the output schema
-  return {
-    gait_speed: 1.1 + (Math.random() * 0.4 - 0.2), // around 1.1 m/s
-    stride_length: 0.7 + (Math.random() * 0.2 - 0.1), // around 0.7m
-    cadence: 110 + (Math.random() * 10 - 5), // around 110 steps/min
-    gait_variability: 0.05 + (Math.random() * 0.04 - 0.02), // around 5%
-    risk_probability: Math.random() * 0.6 + 0.1, // Random risk between 10% and 70%
-    confidence: Math.random() * 0.3 + 0.65, // High confidence in mock data
-  };
+  return analyzeGaitForDementiaIndicatorsFlow(input);
 }
 
-// NOTE: A full Genkit flow is not created here as this is a mock.
-// If this were a real AI model, it would be defined with ai.defineFlow, like this:
-/*
+
+const prompt = ai.definePrompt({
+    name: 'analyzeGaitForDementiaIndicatorsPrompt',
+    input: { schema: AnalyzeGaitForDementiaIndicatorsInputSchema },
+    output: { schema: AnalyzeGaitForDementiaIndicatorsOutputSchema },
+    prompt: `You are an AI expert in biomechanics and neurology, specializing in analyzing gait for early signs of cognitive decline and dementia. You will be given a video of a person walking.
+
+Analyze the provided video: {{media url=videoDataUri}}
+
+Your task is to perform a detailed analysis of the patient's gait and provide the following metrics:
+1.  **Gait Speed**: Estimate the average walking speed in meters per second.
+2.  **Stride Length**: Estimate the average length of a single stride (heel of one foot to heel of the same foot) in meters.
+3.  **Cadence**: Estimate the number of steps taken per minute.
+4.  **Gait Variability**: Provide a normalized score (0 to 1) representing stride-to-stride fluctuations in timing and length. Higher values indicate more variability.
+5.  **Risk Probability**: Based on all observations, estimate the probability (0.0 to 1.0) that the gait displays indicators associated with dementia.
+6.  **Confidence**: Provide your confidence in this assessment (0.0 to 1.0).
+
+Return your analysis in a structured JSON format.`,
+});
+
+
 const analyzeGaitForDementiaIndicatorsFlow = ai.defineFlow(
   {
     name: 'analyzeGaitForDementiaIndicatorsFlow',
@@ -58,10 +61,7 @@ const analyzeGaitForDementiaIndicatorsFlow = ai.defineFlow(
     outputSchema: AnalyzeGaitForDementiaIndicatorsOutputSchema,
   },
   async input => {
-    // Complex video analysis logic would go here, likely calling external
-    // services or a dedicated video processing model.
-    const {output} = await someGaitAnalysisModel.generate(input);
-    return output;
+    const {output} = await prompt(input);
+    return output!;
   }
 );
-*/
