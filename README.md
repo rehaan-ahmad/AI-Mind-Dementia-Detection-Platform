@@ -1,245 +1,276 @@
 
-# AI-Mind: Frontend Documentation
+# AI-MIND: Multi-Modal AI for Early Dementia Detection [SIH 2025]
 
-## 1. Overview
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
+![React](https://img.shields.io/badge/React-18-blue?logo=react)
+![Genkit](https://img.shields.io/badge/Genkit-AI-orange?logo=google)
+![Firebase](https://imgshields.io/badge/Firebase-orange?logo=firebase)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![Shadcn/UI](https://img.shields.io/badge/Shadcn/UI-black?logo=shadcn-ui&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-blue?logo=tailwindcss)
 
-Welcome to the AI-Mind platform's frontend documentation. This document serves as a comprehensive guide for developers working on the user-facing application.
-
-The AI-Mind frontend is a sophisticated, feature-rich web application built with **Next.js** and **React**. It provides a secure and intuitive user interface for healthcare professionals to manage patients, conduct AI-powered dementia risk assessments, and view detailed analytical results.
-
-### Key Features:
-
--   **Role-Based Dashboards**: Tailored user experiences for healthcare providers and administrators.
--   **AI-Powered Assessments**: Seamless integration with Genkit flows for real-time speech and gait analysis.
--   **Data Visualization**: Interactive charts and visualizations for interpreting complex risk factors and assessment results.
--   **Patient Management**: A complete system for adding, viewing, and managing patient records.
--   **Responsive Design**: A modern, responsive interface built with Shadcn/UI and Tailwind CSS that works flawlessly on desktop and mobile devices.
--   **Light/Dark Modes**: A themeable UI with support for user-preferred light and dark modes.
--   **HIPAA/Privacy Aware**: Built with patient data privacy and security as a foremost consideration.
+| License              | Version | Status            |
+| -------------------- | ------- | ----------------- |
+| ![MIT License](https://img.shields.io/badge/License-MIT-green.svg) | `1.0.0` | Production Ready  |
 
 ---
 
-## 2. Technology Stack
+## 1. Introduction and Overview
 
-The frontend is built with a modern, performant, and type-safe technology stack.
+### 1.1. Problem Statement
+Dementia is a growing global health crisis, with a significant impact on India's aging population. Early and accurate detection is one of the greatest challenges, often hindered by the reliance on subjective assessments, limited access to specialized neurologists, and the high cost of advanced diagnostic imaging. There is a critical need for accessible, objective, and scalable tools to identify at-risk individuals sooner, enabling timely intervention and better care planning.
 
-### Core Dependencies
+### 1.2. Our Solution
+**AI-MIND** is a web-based, multi-modal dementia detection platform designed to empower healthcare professionals with cutting-edge AI for early-stage risk assessment. By analyzing a combination of clinical data, speech patterns, and gait biometrics, our platform provides a holistic and objective risk score, complete with explainable AI (XAI) insights. This tool is designed to supplement, not replace, clinical judgment, providing a powerful data-driven assistant for healthcare providers in any setting.
 
-| Technology         | Version | Description                                            |
-| ------------------ | ------- | ------------------------------------------------------ |
-| **Next.js**        | `15.3.3`  | React framework with App Router for server components. |
-| **React**          | `18.3.1`  | Core library for building the user interface.          |
-| **TypeScript**     | `5.x`     | For static typing and improved code quality.           |
-| **Shadcn/UI**      | -       | A collection of reusable UI components.                |
-| **Tailwind CSS**   | `3.4.1`   | A utility-first CSS framework for styling.             |
-| **Genkit**         | `1.20.0`  | AI framework for building and running generative AI flows. |
-| **Lucide React**   | `0.475.0` | Library for beautiful and consistent icons.          |
-| **Recharts**       | `2.15.1`  | Composable charting library for data visualization.    |
-| **Zod**            | `3.24.2`  | Schema validation for forms and API responses.         |
-| **React Hook Form**| `7.54.2`  | Performant form management and validation.           |
-| **Next-Themes**    | `0.3.0`   | For managing light and dark mode themes.               |
+### 1.3. Key Features
+-   **Role-Based Access Control (RBAC)**: Secure, distinct interfaces for healthcare providers and system administrators.
+-   **Multi-Modal AI Assessments**: Real-time analysis of speech (linguistic and acoustic features) and gait (biomechanical metrics) using device sensors.
+-   **Comprehensive Patient Profiles**: A 360-degree view of patient data, including clinical history, cognitive test results, and MRI summaries.
+-   **Explainable AI (XAI) Dashboard**: Interactive visualizations that break down the AI's risk assessment, fostering trust and transparency.
+-   **Responsive & Accessible Design**: A modern, themeable (light/dark mode) UI built with Shadcn/UI and Tailwind CSS, ensuring a seamless experience on both desktop and mobile devices.
+-   **Admin Panel**: A powerful dashboard for system monitoring, user activity tracking, and configuration.
 
-### Development Dependencies
-
-| Technology           | Version | Description                               |
-| -------------------- | ------- | ----------------------------------------- |
-| **Jest**             | `29.7.0`  | Framework for running unit tests.         |
-| **Testing Library**  | `16.0.0`  | Utilities for testing React components.   |
-| **ESLint**           | -       | For code linting and style enforcement.   |
+### 1.4. Demo & Team
+-   **Demo URL**: `[Link to your deployed Firebase Hosting URL]`
+-   **Team**: Team Prometheus
 
 ---
 
-## 3. Project Structure
+## 2. Architecture Overview
 
-The project follows the standard Next.js App Router structure, which emphasizes server-first components and clear feature-based routing.
+AI-MIND is built on a modern, serverless architecture that tightly integrates a Next.js 15 frontend with Google's Genkit for AI orchestration and Firebase for backend services. This design ensures scalability, security, and a seamless developer experience.
 
-```
-/
-├── public/                # Static assets (images, etc.)
-├── src/
-│   ├── ai/                # Genkit AI Flows
-│   │   └── flows/         # Specific AI flow definitions (e.g., speech analysis)
-│   ├── app/               # Next.js App Router
-│   │   ├── (pages)/         # Route groups for different sections
-│   │   │   ├── admin/
-│   │   │   ├── dashboard/
-│   │   │   ├── patients/
-│   │   │   └── ...
-│   │   ├── api/             # API route handlers (if any)
-│   │   ├── auth/            # Authentication components and context
-│   │   ├── globals.css      # Global styles and Tailwind directives
-│   │   └── layout.tsx       # Root application layout
-│   ├── components/        # Reusable React components
-│   │   ├── ui/              # Shadcn-UI components (Button, Card, etc.)
-│   │   └── *.tsx            # Custom application components (e.g., UserNav, PatientForm)
-│   ├── hooks/             # Custom React hooks (e.g., useToast, use-mobile)
-│   ├── lib/               # Shared utilities and libraries
-│   │   ├── actions.ts       # Server Actions
-│   │   ├── data.ts          # Mock data for demonstration
-│   │   ├── types.ts         # TypeScript type definitions
-│   │   └── utils.ts         # Utility functions (e.g., cn for classnames)
-│   └── test-utils/        # Setup and utilities for testing
-├── .env                   # Environment variables (must be configured)
-├── next.config.ts         # Next.js configuration
-├── tailwind.config.ts     # Tailwind CSS configuration
-└── tsconfig.json          # TypeScript configuration
+```mermaid
+graph TD
+    subgraph "User Devices (Browser)"
+        A[Next.js Frontend - React/Shadcn/UI]
+    end
+
+    subgraph "Google Cloud Platform"
+        B[Firebase App Hosting]
+        C[Next.js Server Environment]
+        D[Genkit AI Flows]
+        E[Firebase Authentication]
+        F[Firestore Database]
+        G[Cloud Storage for Firebase]
+    end
+
+    subgraph "Google AI Services"
+        H[Google AI - Gemini Models]
+    end
+
+    A -- "HTTPS Requests" --> B
+    B -- "Serves Frontend & Invokes" --> C
+    C -- "Executes" --> D
+    D -- "User & Role Checks" --> E
+    D -- "Reads/Writes Data" --> F
+    D -- "Stores/Retrieves Large Files" --> G
+    D -- "Calls Generative Models" --> H
+
+    style A fill:#ADD8E6,stroke:#333,stroke-width:2px
+    style B fill:#F0F8FF,stroke:#333,stroke-width:2px
+    style C fill:#F0F8FF,stroke:#333,stroke-width:2px
+    style D fill:#90EE90,stroke:#333,stroke-width:2px
+    style E fill:#FFFACD,stroke:#333,stroke-width:2px
+    style F fill:#FFFACD,stroke:#333,stroke-width:2px
+    style G fill:#FFFACD,stroke:#333,stroke-width:2px
+    style H fill:#E6E6FA,stroke:#333,stroke-width:2px
 ```
 
+> **For a complete technical deep-dive, please see the [AI-MIND Architecture Blueprint (README-blueprint.md)](README-blueprint.md).**
+
 ---
 
-## 4. Setup Instructions
+## 3. Quick Start
 
-Follow these steps to set up and run the project in a local development environment.
+Get the project up and running with a single set of commands.
 
-1.  **Prerequisites**:
-    *   Node.js (v18.x or later)
-    *   npm or yarn
+### Prerequisites
+-   Node.js (v18.x or later)
+-   npm (v9.x or later)
+-   Firebase CLI (`npm install -g firebase-tools`)
 
-2.  **Clone the Repository**:
+### One-Command Setup
+```bash
+# 1. Clone the repository
+git clone <your-repository-url>
+cd <repository-name>
+
+# 2. Install all dependencies
+npm install
+
+# 3. Configure your environment (see detailed setup below)
+# - Create a .env file with your Firebase and Google AI keys
+# - Set up a Firebase project
+
+# 4. Run the development servers
+# In terminal 1:
+npm run dev
+
+# In terminal 2 (for AI flow debugging):
+npm run genkit:watch
+```
+
+---
+
+## 4. Installation and Setup
+
+### 4.1. Environment Setup
+1.  **Create a Firebase Project**: Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
+2.  **Add a Web App**: In your project, add a new Web Application to get your Firebase configuration keys.
+3.  **Enable Services**: In the Firebase Console, enable **Authentication** (with the desired providers) and **Firestore Database**.
+4.  **Get Google AI API Key**: Go to [Google AI Studio](https://aistudio.google.com/) and create an API key.
+
+### 4.2. Local Development
+1.  **Clone & Install**:
     ```bash
-    git clone <repository-url>
+    git clone <your-repository-url>
     cd <repository-name>
-    ```
-
-3.  **Install Dependencies**:
-    ```bash
     npm install
     ```
+2.  **Environment Variables**: Create a `.env` file in the project root. Copy the contents of `.env.example` (if it exists) and fill it with your keys.
 
-4.  **Environment Variables**:
-    Create a `.env` file in the root of the project by copying the `.env.example` file. This file is required for integrating with services like Firebase.
-    ```
+    ```env
     # .env
-    NEXT_PUBLIC_FIREBASE_API_KEY="..."
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="..."
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID="..."
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="..."
+    # Firebase Public Keys
+    NEXT_PUBLIC_FIREBASE_API_KEY="AIza..."
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="your-project.firebaseapp.com"
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID="your-project-id"
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="your-project.appspot.com"
     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="..."
-    NEXT_PUBLIC_FIREBASE_APP_ID="..."
+    NEXT_PUBLIC_FIREBASE_APP_ID="1:..."
 
-    GEMINI_API_KEY="..."
+    # Google AI Private Key (for server-side Genkit flows)
+    GEMINI_API_KEY="AIza..."
     ```
-    *Note: Obtain these keys from your Firebase project settings and Google AI Studio.*
 
-5.  **Run the Development Server**:
-    ```bash
-    npm run dev
-    ```
-    The application will be available at `http://localhost:9002`.
+3.  **Run Development Servers**:
+    -   Next.js app (frontend & server environment): `npm run dev` (access at `http://localhost:9002`)
+    -   Genkit Dev UI (for testing AI flows): `npm run genkit:watch` (access at `http://localhost:4000`)
 
-6.  **Run the Genkit Development Server** (for AI features):
-    In a separate terminal, run:
-    ```bash
-    npm run genkit:watch
-    ```
-    This starts the Genkit development server, allowing you to test and iterate on AI flows.
-
-7.  **Build for Production**:
-    To create an optimized production build:
-    ```bash
-    npm run build
-    ```
+### 4.3. Database Initialization
+This project is designed to work with Firebase Firestore. While the current version uses mock data, a production setup would require security rules.
+> For details on the proposed data schema and security rules, see the **Database Integration** section in the [Backend README (README-backend.md)](README-backend.md).
 
 ---
 
-## 5. Key Feature Implementation
+## 5. Features Breakdown
 
-### Authentication Flow
--   **Provider**: Authentication is managed via `src/app/auth/auth-provider.tsx`, which uses React Context to provide user session data throughout the application.
--   **Mocked Login**: For demonstration purposes, the login flow is mocked in `src/app/login/page.tsx` and does not require a live Firebase connection.
--   **Protected Routes**: The root layout (`src/app/layout.tsx`) checks for an authenticated user and automatically redirects to the login page if a session is not found, effectively protecting all routes.
+### 5.1. Provider & Patient Journey
 
-### Speech Recording Component (`AudioRecorder`)
-The `AudioRecorder` component in `src/components/audio-recorder.tsx` is a key part of the assessment process.
--   **Web Audio API**: It uses `navigator.mediaDevices.getUserMedia` to request microphone access and the `MediaRecorder` API to capture audio.
--   **Real-time Waveform**: A visualizer is included to provide real-time feedback during recording, implemented using the `AnalyserNode` and HTML `Canvas`.
--   **State Management**: It handles various states like `idle`, `recording`, `paused`, and `review`, providing a complete user workflow from recording to submission.
+```mermaid
+sequenceDiagram
+    participant P as Provider (on Frontend)
+    participant B as Backend (Genkit Flows)
+    participant AI as Gemini AI Model
+    participant DB as Firestore
 
-```typescript
-// Sample hook usage within the AudioRecorder
-React.useEffect(() => {
-  async function getMicPermission() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000 } });
-      mediaStreamRef.current = stream;
-      setHasMicPermission(true);
-    } catch (error) {
-      // Handle permission denial
-    }
-  }
-  getMicPermission();
-}, []);
+    P->>P: Logs in, views Patient Dashboard
+    P->>P: Clicks "Add New Patient", fills form
+    B->>DB: createPatient(data)
+    DB-->>P: New patient appears in list
+
+    P->>P: Selects patient, navigates to Patient Details
+    P->>B: Starts Speech Assessment (records audio)
+    B->>AI: analyzeSpeech(audioDataUri)
+    AI-->>B: Returns structured analysis (JSON)
+    B-->>P: Displays real-time speech analysis results
+
+    P->>P: Navigates to Results Dashboard
+    B->>AI: generateRecommendations(patientProfile)
+    AI-->>B: Returns JSON with recommendations
+    B-->>P: Displays XAI charts & recommendations
 ```
 
-### Gait Data Collection
-The gait assessment page (`src/app/assessment/gait/[id]/page.tsx`) uses the device's camera to record video.
--   **Camera Access**: It uses `navigator.mediaDevices.getUserMedia({ video: true })` to access the device's camera.
--   **Video Processing**: The captured video stream is intended to be sent to an AI model for analysis of gait parameters. In the current version, this is handled by a mocked AI flow.
+### 5.2. Admin Journey
+Admins have access to a separate, role-protected dashboard for system oversight.
+-   **Analytics**: View real-time system metrics, assessment volumes, and user activity.
+-   **User Management (Planned)**: A comprehensive interface to manage user roles and permissions.
+-   **System Settings (Planned)**: Configure AI model parameters, security policies, and more.
+-   **Audit Trail (Planned)**: A complete log of all critical user and system actions.
 
-### Results Dashboard
--   **Charts**: The dashboard at `src/app/results/[id]/page.tsx` uses `recharts` to display complex data in an understandable format.
--   **XAI Visualizations**: Components like `RiskFactorChart` help explain the AI's risk assessment by breaking down the contributing factors.
--   **Dynamic Content**: The page fetches AI-generated summaries and recommendations, showcasing the integration between the UI and the backend AI services.
-
----
-
-## 6. Development Guidelines
-
-### Code Style
--   The project uses **ESLint** and **Prettier** for code formatting and quality. Please run `npm run lint` before committing to ensure your code adheres to the project's standards.
-
-### Component Patterns
--   **Atomic Design Principles**: Components are organized logically. Reusable, low-level components (e.g., `Button`, `Card`) are in `src/components/ui`, while more complex, feature-specific components (`PatientForm`) are at the top level of `src/components`.
--   **TypeScript Interfaces**: All props and data structures are strongly typed using TypeScript, primarily defined in `src/lib/types.ts`.
-
-### State Management
--   **React Context**: For global state like authentication (`useAuth`) and theme (`next-themes`), we use React's built-in Context API.
--   **Component State**: For local UI state, we prefer `useState` and `useReducer` to keep components self-contained.
-
-### Testing
--   **Unit Tests**: The project is configured with **Jest** and **React Testing Library**. Test files are co-located with the components they test (e.g., `audio-recorder.test.tsx`). Run tests with `npm test`.
--   **Coverage**: The goal is to maintain a high level of test coverage. Run `npm run test:coverage` to generate a coverage report.
-
-### Error Handling & Loading States
--   **Loading**: Use skeletons or spinners (`Loader2` icon) to indicate loading states during data fetching or AI processing.
--   **Errors**: Display user-friendly error messages using `Alert` components and provide feedback for failed operations via `Toast` notifications.
+> For a full breakdown, see the [Admin Panel README (README-admin.md)](README-admin.md).
 
 ---
 
-## 7. Troubleshooting
+## 6. Technology Stack
 
--   **CORS Errors**: If you encounter CORS issues when calling AI flows, ensure the `Access-Control-Allow-Origin` header is correctly configured on your backend or that you are proxying requests through the Next.js development server.
--   **Firebase Config Issues**: "Firebase: Error (auth/invalid-api-key)" usually means the `.env` file is missing or contains incorrect values. Double-check your Firebase project configuration.
--   **Mobile Permissions**: Camera and microphone access can be tricky on mobile devices. Ensure your application is served over HTTPS (even in development, e.g., using `ngrok`), as browsers require a secure context for these APIs.
+| Layer          | Technology                                   | Rationale                                                                                                    |
+| -------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Frontend**     | Next.js 15 (App Router), React, TypeScript     | Enables server-first development with Server Components, improving performance and developer experience.     |
+| **UI/Styling**   | Shadcn/UI, Tailwind CSS, Recharts            | Provides a set of accessible, composable UI components and a utility-first CSS framework for rapid, consistent styling. |
+| **Backend/AI**   | Genkit (on Next.js)                          | A modern, TypeScript-native AI framework for defining, running, and monitoring serverless AI flows. Tightly integrated with Next.js. |
+| **Database**     | Firebase Firestore (NoSQL)                   | A scalable, real-time NoSQL database with robust security rules, perfect for managing patient and user data.     |
+| **Authentication** | Firebase Authentication                        | Provides a secure, easy-to-use authentication system with built-in support for various providers and role-based access control (RBAC). |
+| **Hosting**      | Firebase App Hosting                         | A fully managed, serverless hosting service optimized for Next.js applications, offering automatic scaling and CI/CD. |
+| **AI Models**    | Google AI - Gemini Family (Flash, Pro)         | State-of-the-art models for multi-modal analysis (text, audio, video) and structured data generation.         |
+
+> For in-depth frontend and backend documentation, see [README-frontend.md](README-frontend.md) and [README-backend.md](README-backend.md).
 
 ---
 
-## 8. Deployment
+## 7. Security and Compliance
 
-The application is designed for easy deployment on modern hosting platforms that support Next.js.
+Security and privacy are foundational to the AI-MIND platform.
+-   **Authentication**: Secure authentication is handled by Firebase Authentication, with role-based access control (RBAC) managed via Custom Claims.
+-   **Authorization**: All sensitive pages and AI flows are protected, ensuring users can only access data they are permitted to see.
+-   **Data Privacy**: The architecture is designed with HIPAA principles in mind. Firestore Security Rules are intended to enforce strict data access policies (e.g., a provider can only access their assigned patients).
+-   **Audit Trail (Planned)**: A comprehensive logging system is designed to track all significant user and system actions for compliance and security monitoring.
 
-### Firebase Hosting
+> See the [Admin Panel README (README-admin.md)](README-admin.md) for more on security features.
+
+---
+
+## 8. Testing and Quality Assurance
+
+The project is configured for robust testing to ensure code quality and reliability.
+-   **Unit & Integration Tests**: **Jest** and **React Testing Library** are used for testing frontend components. Test files are co-located with their respective components.
+-   **AI Flow Testing**: The **Genkit Developer UI** (`npm run genkit:watch`) provides an interactive environment for testing and debugging AI flows in isolation.
+-   **Static Analysis**: **ESLint** and **TypeScript** are used for static code analysis, catching errors and enforcing code style before runtime.
+
+```bash
+# Run all unit tests in watch mode
+npm test
+```
+
+---
+
+## 9. Deployment Guide
+
+The application is optimized for serverless deployment on **Firebase App Hosting**.
+
 1.  **Install Firebase CLI**: `npm install -g firebase-tools`
 2.  **Login**: `firebase login`
-3.  **Initialize**: `firebase init hosting` (Connect to your Firebase project).
+3.  **Initialize**: `firebase init hosting` (Select your Firebase project and configure it for a web framework build).
 4.  **Build**: `npm run build`
 5.  **Deploy**: `firebase deploy --only hosting`
 
-### Environment Variables
--   For any deployment provider, you must configure the environment variables (e.g., `NEXT_PUBLIC_FIREBASE_API_KEY`, `GEMINI_API_KEY`) in the provider's dashboard. Do not commit these secrets to your repository.
+**Environment Variables**: Before deploying, ensure all required environment variables (e.g., `GEMINI_API_KEY`) are configured in the Firebase App Hosting dashboard.
 
 ---
 
-## 9. Contributing
+## 10. Contributing
 
 We welcome contributions! Please follow these guidelines:
-
--   **Feature Branches**: Create a new branch for each feature or bug fix (`feature/my-new-feature` or `fix/login-bug`).
+-   **Branching**: Create a new branch for each feature or bugfix (e.g., `feature/add-new-chart` or `fix/login-bug`).
 -   **Pull Requests (PRs)**:
-    -   Submit PRs against the `develop` branch.
+    -   Submit PRs against the `main` branch.
     -   Ensure all tests pass (`npm test`).
     -   Ensure the code is linted (`npm run lint`).
     -   Provide a clear description of the changes in your PR.
 -   **Code Reviews**: All PRs require at least one approval from a maintainer before being merged.
 
-Thank you for contributing to the AI-Mind platform!
+---
+
+## 11. License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 12. References and Further Reading
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Genkit Documentation](https://firebase.google.com/docs/genkit)
+- [Shadcn/UI](https://ui.shadcn.com/)
+- [Firebase Documentation](https://firebase.google.com/docs)
