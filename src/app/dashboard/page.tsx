@@ -53,16 +53,16 @@ function getAvatarUrl(patient: Patient) {
   return image ? image.imageUrl : 'https://picsum.photos/seed/placeholder/100/100';
 }
 
-function getRiskBadgeVariant(level: Patient['riskAssessment']['level']) {
+function getRiskBadgeClass(level: Patient['riskAssessment']['level']) {
   switch (level) {
     case 'Low':
-      return 'default';
+      return 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300 border-green-200 dark:border-green-700/60';
     case 'Medium':
-      return 'secondary';
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700/60';
     case 'High':
-      return 'destructive';
+      return 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300 border-red-200 dark:border-red-700/60';
     default:
-      return 'outline';
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
   }
 }
 
@@ -92,7 +92,7 @@ const PatientRow = React.memo(({ patient, onDelete }: { patient: Patient, onDele
             {patient.gender}
             </TableCell>
             <TableCell>
-            <Badge variant={getRiskBadgeVariant(patient.riskAssessment.level)}>
+            <Badge className={cn(getRiskBadgeClass(patient.riskAssessment.level))}>
                 {patient.riskAssessment.level}
             </Badge>
             </TableCell>
@@ -213,52 +213,52 @@ export default function Dashboard() {
       </div>
 
        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">
               Total Patients
             </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 pt-0">
             <div className="text-2xl font-bold">{totalPatients}</div>
             <p className="text-xs text-muted-foreground">
               All patients in the system
             </p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">
               High-Risk
             </CardTitle>
-            <AlertTriangle className="h-4 w-4 text-destructive" />
+            <AlertTriangle className="h-4 w-4 text-red-500" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 pt-0">
             <div className="text-2xl font-bold">{highRiskPatients}</div>
             <p className="text-xs text-muted-foreground">
                 Patients requiring immediate attention
             </p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">Medium-Risk</CardTitle>
-            <HeartPulse className="h-4 w-4 text-muted-foreground" />
+            <HeartPulse className="h-4 w-4 text-yellow-500" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 pt-0">
             <div className="text-2xl font-bold">{mediumRiskPatients}</div>
             <p className="text-xs text-muted-foreground">
               Patients requiring monitoring
             </p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">Low-Risk</CardTitle>
-             <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+             <ShieldCheck className="h-4 w-4 text-green-500" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 pt-0">
             <div className="text-2xl font-bold">{lowRiskPatients}</div>
             <p className="text-xs text-muted-foreground">
               Patients with stable assessments
@@ -267,7 +267,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
             <div className="flex flex-col sm:flex-row justify-between gap-4">
                 <div>
