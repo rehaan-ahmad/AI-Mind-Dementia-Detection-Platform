@@ -24,9 +24,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useTheme } from 'next-themes';
 
 export default function SettingsPage() {
+  const { setTheme } = useTheme();
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
@@ -55,6 +59,74 @@ export default function SettingsPage() {
         </CardContent>
         <CardFooter>
           <Button>Save Profile</Button>
+        </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Appearance</CardTitle>
+          <CardDescription>
+            Customize the look and feel of the application.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+           <div>
+              <h4 className="font-medium mb-4">Color Palette</h4>
+              <RadioGroup defaultValue="default" onValueChange={(value) => {
+                  document.body.classList.remove('theme-cool', 'theme-warm');
+                  if (value !== 'default') {
+                    document.body.classList.add(`theme-${value}`);
+                  }
+              }}>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <Label htmlFor="theme-default" className="border rounded-md p-4 cursor-pointer hover:border-primary">
+                    <RadioGroupItem value="default" id="theme-default" className="sr-only" />
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="h-6 w-6 rounded-full bg-primary" style={{'--primary': '256 90% 66%' } as React.CSSProperties}></div>
+                        <span className="font-semibold">Default</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">The standard purple theme.</p>
+                  </Label>
+                  <Label htmlFor="theme-cool" className="border rounded-md p-4 cursor-pointer hover:border-primary">
+                    <RadioGroupItem value="cool" id="theme-cool" className="sr-only" />
+                     <div className="flex items-center gap-2 mb-2">
+                        <div className="h-6 w-6 rounded-full bg-primary" style={{'--primary': '217 91% 60%'} as React.CSSProperties}></div>
+                        <span className="font-semibold">Cool</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">A calming blue-based palette.</p>
+                  </Label>
+                   <Label htmlFor="theme-warm" className="border rounded-md p-4 cursor-pointer hover:border-primary">
+                    <RadioGroupItem value="warm" id="theme-warm" className="sr-only" />
+                     <div className="flex items-center gap-2 mb-2">
+                        <div className="h-6 w-6 rounded-full bg-primary" style={{'--primary': '35 92% 55%'} as React.CSSProperties}></div>
+                        <span className="font-semibold">Warm</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">An energetic orange-based palette.</p>
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+            <Separator />
+            <div>
+              <h4 className="font-medium mb-4">Layout Density</h4>
+              <RadioGroup defaultValue="comfortable">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <Label htmlFor="density-comfortable" className="border rounded-md p-4 cursor-pointer hover:border-primary">
+                    <RadioGroupItem value="comfortable" id="density-comfortable" className="sr-only" />
+                    <span className="font-semibold">Comfortable</span>
+                    <p className="text-xs text-muted-foreground">Default spacing and size.</p>
+                  </Label>
+                  <Label htmlFor="density-compact" className="border rounded-md p-4 cursor-pointer hover:border-primary">
+                    <RadioGroupItem value="compact" id="density-compact" className="sr-only" />
+                    <span className="font-semibold">Compact</span>
+                    <p className="text-xs text-muted-foreground">Smaller controls for more data.</p>
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+        </CardContent>
+        <CardFooter>
+          <Button>Save Appearance Settings</Button>
         </CardFooter>
       </Card>
 
