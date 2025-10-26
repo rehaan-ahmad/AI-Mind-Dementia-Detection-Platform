@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -74,9 +75,19 @@ const riskLevelOrder: { [key in Patient['riskAssessment']['level']]: number } = 
 };
 
 
-const PatientRow = React.memo(({ patient, onDelete }: { patient: Patient, onDelete: (patientId: string) => void }) => {
+const PatientRow = React.memo(({ patient, onDelete, isSelected, onSelect }: { patient: Patient, onDelete: (patientId: string) => void, isSelected: boolean, onSelect: (patientId: string, checked: boolean) => void }) => {
     return (
-        <TableRow className="hover:bg-muted/50 even:bg-[#FAFAF9] dark:even:bg-[#1F2937] border-b border-border transition-transform duration-300 ease-in-out hover:scale-[1.01]">
+        <TableRow 
+            data-state={isSelected ? 'selected' : ''}
+            className="hover:bg-muted/50 even:bg-[#FAFAF9] dark:even:bg-[#1F2937] border-b border-border transition-transform duration-300 ease-in-out hover:scale-[1.01] data-[state=selected]:bg-primary/10 data-[state=selected]:shadow-md"
+        >
+             <TableCell className="p-2">
+                <Checkbox
+                    checked={isSelected}
+                    onCheckedChange={(checked) => onSelect(patient.id, !!checked)}
+                    aria-label={`Select patient ${patient.name}`}
+                />
+            </TableCell>
             <TableCell className="hidden sm:table-cell p-2">
             <Image
                 alt="Patient avatar"
@@ -150,6 +161,7 @@ export default function Dashboard() {
     const [sortKey, setSortKey] = React.useState<SortKey>('riskAssessment.level');
     const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('desc');
     const [lastUpdated] = React.useState(new Date());
+    const [selectedRows, setSelectedRows] = React.useState<Set<string>>(new Set());
 
     const totalPatients = patients.length;
     const highRiskPatients = patients.filter(p => p.riskAssessment.level === 'High').length;
@@ -167,6 +179,11 @@ export default function Dashboard() {
     
     const handleDeletePatient = (patientId: string) => {
         deletePatient(patientId);
+        setSelectedRows(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(patientId);
+            return newSet;
+        });
         toast({
             title: 'Patient Deleted',
             description: 'The patient has been removed from the list.',
@@ -195,6 +212,26 @@ export default function Dashboard() {
                 return 0;
             });
     }, [patients, filter, sortKey, sortDirection]);
+    
+    const handleSelectAll = (checked: boolean) => {
+        if (checked) {
+            setSelectedRows(new Set(sortedAndFilteredPatients.map(p => p.id)));
+        } else {
+            setSelectedRows(new Set());
+        }
+    };
+    
+    const handleSelectRow = (patientId: string, checked: boolean) => {
+        setSelectedRows(prev => {
+            const newSet = new Set(prev);
+            if (checked) {
+                newSet.add(patientId);
+            } else {
+                newSet.delete(patientId);
+            }
+            return newSet;
+        });
+    };
 
     const SortableHeader = ({ sortKey: key, children, className }: { sortKey: SortKey, children: React.ReactNode, className?: string }) => (
         <TableHead className={cn("text-muted-foreground", className)}>
@@ -297,6 +334,13 @@ export default function Dashboard() {
             <Table>
               <TableHeader className="bg-[#F3F4F6] dark:bg-muted">
                 <TableRow className="hover:bg-transparent border-b border-border">
+                    <TableHead className="p-2 w-[40px]">
+                        <Checkbox
+                            onCheckedChange={(checked) => handleSelectAll(!!checked)}
+                            checked={selectedRows.size > 0 && selectedRows.size === sortedAndFilteredPatients.length}
+                            aria-label="Select all rows"
+                        />
+                    </TableHead>
                   <TableHead className="hidden w-[60px] sm:table-cell p-2">
                     <span className="sr-only">Avatar</span>
                   </TableHead>
@@ -311,7 +355,7 @@ export default function Dashboard() {
               </TableHeader>
               <TableBody>
                 {sortedAndFilteredPatients.map((patient) => (
-                  <PatientRow key={patient.id} patient={patient} onDelete={handleDeletePatient} />
+                  <PatientRow key={patient.id} patient={patient} onDelete={handleDeletePatient} isSelected={selectedRows.has(patient.id)} onSelect={handleSelectRow}/>
                 ))}
               </TableBody>
             </Table>
@@ -321,11 +365,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-    
-
-    
-
-    
-
-    
