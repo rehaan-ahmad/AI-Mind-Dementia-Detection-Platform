@@ -1,4 +1,6 @@
+
 import type {Config} from 'tailwindcss';
+const colors = require('tailwindcss/colors');
 
 export default {
   darkMode: ['class'],
@@ -65,6 +67,8 @@ export default {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        // Adding amber color for medium risk
+        amber: colors.amber,
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -97,3 +101,5 @@ export default {
   },
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
+
+    
