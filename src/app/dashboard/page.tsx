@@ -58,9 +58,9 @@ function getRiskBadgeClass(level: Patient['riskAssessment']['level']) {
     case 'Low':
       return 'bg-green-600 text-green-50 shadow-sm hover:bg-green-600/80';
     case 'Medium':
-      return 'bg-amber-500 text-amber-50 shadow-sm hover:bg-amber-500/80';
+      return 'bg-amber-600 text-amber-50 shadow-sm hover:bg-amber-600/80';
     case 'High':
-      return 'bg-red-600 text-red-50 shadow-sm hover:bg-red-600/80';
+      return 'bg-red-700 text-red-50 shadow-sm hover:bg-red-700/80';
     default:
       return 'bg-gray-500 text-white shadow-sm hover:bg-gray-500/80';
   }
@@ -206,14 +206,14 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Patient Dashboard</h1>
+        <h1 className="text-2xl font-semibold">Patient Dashboard</h1>
         <p className="text-muted-foreground">
           Overview of all patients and their dementia risk assessments.
         </p>
       </div>
 
        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-sm rounded-lg">
+        <Card className="shadow-soft rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">
               Total Patients
@@ -227,7 +227,7 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card className="shadow-sm rounded-lg">
+        <Card className="shadow-soft rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">
               High-Risk
@@ -241,7 +241,7 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card className="shadow-sm rounded-lg">
+        <Card className="shadow-soft rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">Medium-Risk</CardTitle>
             <HeartPulse className="h-5 w-5 text-yellow-500" />
@@ -253,7 +253,7 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card className="shadow-sm rounded-lg">
+        <Card className="shadow-soft rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">Low-Risk</CardTitle>
              <ShieldCheck className="h-5 w-5 text-green-500" />
@@ -267,7 +267,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Card className="shadow-sm rounded-lg">
+      <Card className="shadow-soft rounded-xl">
         <CardHeader>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
@@ -316,7 +316,5 @@ export default function Dashboard() {
     </div>
   );
 }
-
-    
 
     
