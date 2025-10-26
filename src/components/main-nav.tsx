@@ -19,7 +19,7 @@ export function MainNav() {
   const mainNavItems = [
     { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', tooltip: 'Dashboard' },
     { href: '/assessment', icon: Bot, label: 'AI Assessment', tooltip: 'AI Assessment' },
-    { href: '/patients', icon: Users, label: 'All Patients', tooltip: 'All Patients' },
+    { href: '/dashboard', icon: Users, label: 'All Patients', tooltip: 'All Patients' },
   ];
 
   const secondaryNavItems = [
@@ -34,10 +34,10 @@ export function MainNav() {
     <div className="flex flex-col h-full">
       <SidebarMenu className="flex-1">
         {mainNavItems.map(item => (
-          <SidebarMenuItem key={item.href}>
+          <SidebarMenuItem key={item.href + item.label}>
             <Link href={item.href}>
               <SidebarMenuButton 
-                isActive={pathname.startsWith(item.href) && (item.href !== '/dashboard' || pathname === '/dashboard')} 
+                isActive={pathname.startsWith(item.href) && (item.href !== '/dashboard' || pathname === '/dashboard' || (item.label === 'All Patients' && pathname.startsWith('/dashboard')))} 
                 tooltip={item.tooltip}
               >
                 <item.icon />
