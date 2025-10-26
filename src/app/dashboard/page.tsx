@@ -60,7 +60,7 @@ function getRiskBadgeClass(level: Patient['riskAssessment']['level']) {
     case 'Medium':
       return 'bg-[#D97706]/85 text-white shadow-sm hover:bg-[#D97706]/75';
     case 'High':
-      return 'bg-[#DC2626]/90 text-white shadow-sm hover:bg-[#DC2626]/80';
+      return 'bg-[#DC2626]/90 text-white shadow-sm hover:bg-[#DC2626]/80 animate-pulse-slow';
     default:
       return 'bg-gray-500 text-white shadow-sm hover:bg-gray-500/80';
   }
@@ -75,7 +75,7 @@ const riskLevelOrder: { [key in Patient['riskAssessment']['level']]: number } = 
 
 const PatientRow = React.memo(({ patient, onDelete }: { patient: Patient, onDelete: (patientId: string) => void }) => {
     return (
-        <TableRow className="hover:bg-muted/50 even:bg-[#FAFAF9] dark:even:bg-[#1F2937] border-b border-border">
+        <TableRow className="hover:bg-muted/50 even:bg-[#FAFAF9] dark:even:bg-[#1F2937] border-b border-border transition-transform duration-300 ease-in-out hover:scale-[1.01]">
             <TableCell className="hidden sm:table-cell p-2">
             <Image
                 alt="Patient avatar"
@@ -206,13 +206,13 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Patient Dashboard</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground leading-snug -letter-spacing-tight">Patient Dashboard</h1>
+        <p className="text-muted-foreground leading-normal">
           Overview of all patients and their dementia risk assessments.
         </p>
       </div>
 
-       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 animate-fade-in-up">
         <Card className="shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">
@@ -267,12 +267,12 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Card className="shadow-soft">
+      <Card className="shadow-soft animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
         <CardHeader>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <CardTitle className="text-xl">Patient List</CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-xl font-medium leading-snug">Patient List</CardTitle>
+                    <CardDescription className="leading-normal">
                         A list of all patients currently in the system.
                     </CardDescription>
                 </div>
@@ -316,3 +316,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+    
