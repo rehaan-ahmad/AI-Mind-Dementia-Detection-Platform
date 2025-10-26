@@ -56,11 +56,11 @@ function getAvatarUrl(patient: Patient) {
 function getRiskBadgeClass(level: Patient['riskAssessment']['level']) {
   switch (level) {
     case 'Low':
-      return 'bg-green-600 text-green-50 shadow-sm hover:bg-green-600/80';
+      return 'bg-[#059669]/90 text-white shadow-sm hover:bg-[#059669]/80';
     case 'Medium':
-      return 'bg-amber-600 text-amber-50 shadow-sm hover:bg-amber-600/80';
+      return 'bg-[#D97706]/85 text-white shadow-sm hover:bg-[#D97706]/75';
     case 'High':
-      return 'bg-red-700 text-red-50 shadow-sm hover:bg-red-700/80';
+      return 'bg-[#DC2626]/90 text-white shadow-sm hover:bg-[#DC2626]/80';
     default:
       return 'bg-gray-500 text-white shadow-sm hover:bg-gray-500/80';
   }
@@ -75,11 +75,11 @@ const riskLevelOrder: { [key in Patient['riskAssessment']['level']]: number } = 
 
 const PatientRow = React.memo(({ patient, onDelete }: { patient: Patient, onDelete: (patientId: string) => void }) => {
     return (
-        <TableRow className="hover:bg-muted/50 even:bg-card dark:even:bg-white/5 border-b border-border">
+        <TableRow className="hover:bg-muted/50 even:bg-[#FAFAF9] dark:even:bg-[#1F2937] border-b border-border">
             <TableCell className="hidden sm:table-cell p-2">
             <Image
                 alt="Patient avatar"
-                className="aspect-square rounded-full object-cover"
+                className="aspect-square rounded-full object-cover shadow-md"
                 height="40"
                 src={getAvatarUrl(patient)}
                 width="40"
@@ -213,7 +213,7 @@ export default function Dashboard() {
       </div>
 
        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">
               Total Patients
@@ -227,7 +227,7 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">
               High-Risk
@@ -241,10 +241,10 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">Medium-Risk</CardTitle>
-            <HeartPulse className="h-5 w-5 text-yellow-500" />
+            <HeartPulse className="h-5 w-5 text-amber-500" />
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <div className="text-2xl font-bold">{mediumRiskPatients}</div>
@@ -253,7 +253,7 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">Low-Risk</CardTitle>
              <ShieldCheck className="h-5 w-5 text-green-500" />
@@ -267,7 +267,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="shadow-soft">
         <CardHeader>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
@@ -290,7 +290,7 @@ export default function Dashboard() {
         <CardContent>
           <div className="border rounded-lg overflow-hidden">
             <Table>
-              <TableHeader className="bg-muted">
+              <TableHeader className="bg-[#F3F4F6] dark:bg-muted">
                 <TableRow className="hover:bg-transparent border-b border-border">
                   <TableHead className="hidden w-[60px] sm:table-cell p-2">
                     <span className="sr-only">Avatar</span>
@@ -316,6 +316,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-    
-    
