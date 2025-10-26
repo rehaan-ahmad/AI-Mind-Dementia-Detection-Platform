@@ -206,7 +206,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground leading-snug -letter-spacing-tight">Patient Dashboard</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground leading-snug">Patient Dashboard</h1>
         <p className="text-muted-foreground leading-normal">
           Overview of all patients and their dementia risk assessments.
         </p>
