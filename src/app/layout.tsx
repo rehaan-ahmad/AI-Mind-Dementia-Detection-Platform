@@ -14,7 +14,7 @@ import {
 import { UserNav } from '@/components/user-nav';
 import { MainNav } from '@/components/main-nav';
 import Link from 'next/link';
-import { BrainCircuit, Loader2 } from 'lucide-react';
+import { BrainCircuit, Loader2, LifeBuoy, LogOut } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 import { Button } from '@/components/ui/button';
 import { AuthProvider, useAuth } from '@/app/auth/auth-provider';
@@ -29,7 +29,7 @@ function AppLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   
   const publicRoutes = ['/', '/login'];
   const isPublicRoute = publicRoutes.includes(pathname);
@@ -52,22 +52,30 @@ function AppLayout({
         <SidebarHeader className="border-b border-sidebar-border">
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 font-semibold text-sidebar-primary-foreground"
+            className="flex items-center gap-2 font-semibold text-foreground group-data-[state=expanded]:opacity-100 group-data-[state=collapsed]:opacity-0 transition-opacity duration-200"
             aria-label="AI-Mind Home"
           >
-            <BrainCircuit className="h-6 w-6 text-sidebar-primary" />
+            <BrainCircuit className="h-6 w-6 text-primary" />
             <span className="text-lg">AI-Mind</span>
           </Link>
+           <BrainCircuit className="h-7 w-7 text-primary group-data-[state=collapsed]:opacity-100 group-data-[state=expanded]:opacity-0 transition-opacity duration-200 absolute left-3 top-3" />
         </SidebarHeader>
         <SidebarContent>
           <MainNav />
         </SidebarContent>
-        <SidebarFooter className="p-2">
-          <Button variant="outline" className="w-full">Help & Support</Button>
+        <SidebarFooter className="p-3">
+          <Button variant="ghost" className="w-full justify-start">
+            <LifeBuoy />
+            <span>Help & Support</span>
+          </Button>
+           <Button variant="ghost" className="w-full justify-start" onClick={() => logout()}>
+            <LogOut />
+            <span>Log Out</span>
+          </Button>
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6">
+        <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6">
           <SidebarTrigger className="md:hidden" />
           <div className="flex-1" />
           <Button asChild>
