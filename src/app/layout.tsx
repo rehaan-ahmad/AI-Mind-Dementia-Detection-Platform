@@ -48,6 +48,9 @@ function AppLayout({
 
   return (
     <SidebarProvider>
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-background focus:text-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2">
+        Skip to main content
+      </a>
       <Sidebar>
         <SidebarHeader className="border-b border-sidebar-border">
           <Link
@@ -89,7 +92,7 @@ function AppLayout({
             <UserNav />
           </div>
         </header>
-        <main className="flex-1 p-4 md:p-8">{children}</main>
+        <main id="main-content" className="flex-1 p-4 md:p-8">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );

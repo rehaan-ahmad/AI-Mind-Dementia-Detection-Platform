@@ -79,7 +79,7 @@ const PatientRow = React.memo(({ patient, onDelete, isSelected, onSelect }: { pa
     return (
         <TableRow 
             data-state={isSelected ? 'selected' : ''}
-            className="hover:bg-muted/50 even:bg-[#FAFAF9] dark:even:bg-[#1F2937] border-b border-border transition-transform duration-300 ease-in-out hover:scale-[1.01] data-[state=selected]:bg-primary/10 data-[state=selected]:shadow-md"
+            className="hover:bg-muted/50 even:bg-[#FAFAF9] dark:even:bg-[#1F2937] border-b border-border transition-transform duration-300 ease-in-out hover:scale-[1.01] data-[state=selected]:bg-primary/10 data-[state=selected]:shadow-md data-[state=selected]:border-l-4 data-[state=selected]:border-l-primary"
         >
              <TableCell className="p-2">
                 <Checkbox
@@ -105,7 +105,7 @@ const PatientRow = React.memo(({ patient, onDelete, isSelected, onSelect }: { pa
             </TableCell>
             <TableCell>
             <Badge className={cn("font-semibold py-1.5 px-3 text-xs rounded-full", getRiskBadgeClass(patient.riskAssessment.level))}>
-                {patient.riskAssessment.level}
+                {patient.riskAssessment.level} <span className="sr-only"> Risk</span>
             </Badge>
             </TableCell>
             <TableCell>
@@ -118,7 +118,7 @@ const PatientRow = React.memo(({ patient, onDelete, isSelected, onSelect }: { pa
                         variant="ghost"
                     >
                         <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Toggle menu</span>
+                        <span className="sr-only">Toggle menu for {patient.name}</span>
                     </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -279,6 +279,7 @@ export default function Dashboard() {
           <CardContent className="p-4 pt-0">
             <div className="text-2xl font-bold">{highRiskPatients}</div>
             <p className="text-xs text-muted-foreground">
+                <span className="sr-only">Number of high risk patients: </span>
                 Patients requiring immediate attention
             </p>
           </CardContent>
@@ -291,6 +292,7 @@ export default function Dashboard() {
           <CardContent className="p-4 pt-0">
             <div className="text-2xl font-bold">{mediumRiskPatients}</div>
             <p className="text-xs text-muted-foreground">
+              <span className="sr-only">Number of medium risk patients: </span>
               Patients requiring monitoring
             </p>
           </CardContent>
@@ -303,6 +305,7 @@ export default function Dashboard() {
           <CardContent className="p-4 pt-0">
             <div className="text-2xl font-bold">{lowRiskPatients}</div>
             <p className="text-xs text-muted-foreground">
+              <span className="sr-only">Number of low risk patients: </span>
               Patients with stable assessments
             </p>
           </CardContent>
@@ -319,8 +322,10 @@ export default function Dashboard() {
                     </CardDescription>
                 </div>
                 <div className="relative w-full sm:w-auto">
+                    <label htmlFor="patient-search" className="sr-only">Search by patient name</label>
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input 
+                        id="patient-search"
                         placeholder="Search by patient name..." 
                         className="pl-8 sm:w-[300px] rounded-md bg-[#F9FAFB] border-[#D1D5DB] placeholder:text-[#6B7280] dark:bg-[#374151] dark:border-[#6B7280] dark:placeholder:text-[#D1D5DB]"
                         value={filter}
