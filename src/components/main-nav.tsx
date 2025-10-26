@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Shield } from 'lucide-react';
+import { LayoutDashboard, Shield, Bot } from 'lucide-react';
 import {
   SidebarMenu,
   SidebarMenuItem,
@@ -21,6 +21,14 @@ export function MainNav() {
           <SidebarMenuButton isActive={pathname.startsWith('/dashboard')} tooltip="Dashboard">
             <LayoutDashboard />
             <span>Dashboard</span>
+          </SidebarMenuButton>
+        </Link>
+      </SidebarMenuItem>
+       <SidebarMenuItem>
+        <Link href="/assessment">
+          <SidebarMenuButton isActive={pathname.startsWith('/assessment')} tooltip="AI Assessment">
+            <Bot />
+            <span>AI Assessment</span>
           </SidebarMenuButton>
         </Link>
       </SidebarMenuItem>

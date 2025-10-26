@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -24,7 +24,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { generateInitialPatientSummary, type GenerateInitialPatientSummaryOutput } from '@/ai/flows/generate-initial-patient-summary';
 import { explainRiskAssessmentRationale, type ExplainRiskAssessmentRationaleOutput } from '@/ai/flows/explain-risk-assessment-rationale';
-import { ArrowLeft, Bot, History, Scan, Stethoscope, Mic, Footprints, BookOpen, Users, Pill, Activity, BarChart3, FileText, Loader2 } from 'lucide-react';
+import { ArrowLeft, Bot, History, Scan, Stethoscope, BookOpen, Users, Pill, Activity, BarChart3, FileText, Loader2 } from 'lucide-react';
 import { RiskVisualization } from '@/components/risk-visualization';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/app/auth/auth-provider';
@@ -101,18 +101,6 @@ function PatientDetails({ patient }: { patient: Patient }) {
             </div>
         </div>
         <div className="flex gap-2 flex-wrap">
-            <Button asChild variant="outline">
-                <Link href={`/assessment/gait/${patient.id}`}>
-                    <Footprints className="mr-2 h-4 w-4" />
-                    Gait Assessment
-                </Link>
-            </Button>
-            <Button asChild variant="outline">
-                <Link href={`/assessment/speech/${patient.id}`}>
-                    <Mic className="mr-2 h-4 w-4" />
-                    Speech Assessment
-                </Link>
-            </Button>
              <Button asChild>
                 <Link href={`/results/${patient.id}`}>
                     <BarChart3 className="mr-2 h-4 w-4" />
