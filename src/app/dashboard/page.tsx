@@ -56,11 +56,11 @@ function getAvatarUrl(patient: Patient) {
 function getRiskBadgeClass(level: Patient['riskAssessment']['level']) {
   switch (level) {
     case 'Low':
-      return 'bg-green-700 text-white shadow-sm hover:bg-green-700/80';
+      return 'bg-green-600 text-green-50 shadow-sm hover:bg-green-600/80';
     case 'Medium':
-      return 'bg-amber-600 text-white shadow-sm hover:bg-amber-600/80';
+      return 'bg-amber-500 text-amber-50 shadow-sm hover:bg-amber-500/80';
     case 'High':
-      return 'bg-red-600 text-white shadow-md hover:bg-red-600/80';
+      return 'bg-red-600 text-red-50 shadow-sm hover:bg-red-600/80';
     default:
       return 'bg-gray-500 text-white shadow-sm hover:bg-gray-500/80';
   }
@@ -92,7 +92,7 @@ const PatientRow = React.memo(({ patient, onDelete }: { patient: Patient, onDele
             {patient.gender}
             </TableCell>
             <TableCell>
-            <Badge className={cn("font-semibold py-1.5 px-3 text-xs", getRiskBadgeClass(patient.riskAssessment.level))}>
+            <Badge className={cn("font-semibold py-1.5 px-3 text-xs rounded-full", getRiskBadgeClass(patient.riskAssessment.level))}>
                 {patient.riskAssessment.level}
             </Badge>
             </TableCell>
@@ -279,7 +279,7 @@ export default function Dashboard() {
                 <div className="relative w-full sm:w-auto">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input 
-                        placeholder="Filter by name..." 
+                        placeholder="Search by patient name..." 
                         className="pl-8 sm:w-[300px] rounded-md"
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}

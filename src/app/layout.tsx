@@ -14,7 +14,7 @@ import {
 import { UserNav } from '@/components/user-nav';
 import { MainNav } from '@/components/main-nav';
 import Link from 'next/link';
-import { BrainCircuit, Loader2, LifeBuoy, LogOut } from 'lucide-react';
+import { BrainCircuit, Loader2, LifeBuoy, LogOut, UserPlus } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 import { Button } from '@/components/ui/button';
 import { AuthProvider, useAuth } from '@/app/auth/auth-provider';
@@ -79,10 +79,15 @@ function AppLayout({
           <SidebarTrigger className="md:hidden" />
           <div className="flex-1" />
           <Button asChild>
-            <Link href="/patients/new">Add New Patient</Link>
+            <Link href="/patients/new">
+                <UserPlus className="mr-2 h-4 w-4" />
+                Add New Patient
+            </Link>
           </Button>
-          <ThemeToggle />
-          <UserNav />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <UserNav />
+          </div>
         </header>
         <main className="flex-1 p-4 md:p-8">{children}</main>
       </SidebarInset>
