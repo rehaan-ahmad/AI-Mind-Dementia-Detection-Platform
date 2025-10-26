@@ -1,4 +1,7 @@
 
+'use client';
+
+import * as React from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,14 +20,15 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { patients } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
-import { generateInitialPatientSummary } from '@/ai/flows/generate-initial-patient-summary';
-import { explainRiskAssessmentRationale } from '@/ai/flows/explain-risk-assessment-rationale';
-import { ArrowLeft, Bot, History, Scan, Stethoscope, Mic, Footprints, BookOpen, Users, Pill, Activity, BarChart3, FileText } from 'lucide-react';
+import { generateInitialPatientSummary, type GenerateInitialPatientSummaryOutput } from '@/ai/flows/generate-initial-patient-summary';
+import { explainRiskAssessmentRationale, type ExplainRiskAssessmentRationaleOutput } from '@/ai/flows/explain-risk-assessment-rationale';
+import { ArrowLeft, Bot, History, Scan, Stethoscope, Mic, Footprints, BookOpen, Users, Pill, Activity, BarChart3, FileText, Loader2 } from 'lucide-react';
 import { RiskVisualization } from '@/components/risk-visualization';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/app/auth/auth-provider';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function getMriScanUrl(patient: Patient) {
   const image = PlaceHolderImages.find((img) => img.id === patient.mriScanId);
@@ -44,18 +48,38 @@ function getRiskBadgeVariant(level: Patient['riskAssessment']['level']) {
   }
 }
 
-async function PatientDetails({ patient }: { patient: Patient }) {
-  const [summaryResult, rationaleResult] = await Promise.all([
-    generateInitialPatientSummary({
-      mriScanSummary: patient.mriScanSummary,
-      cognitiveTestResults: patient.cognitiveTestResults,
-      patientHistory: patient.patientHistory,
-    }),
-    explainRiskAssessmentRationale({
-      patientData: JSON.stringify(patient),
-      riskAssessment: `Level: ${patient.riskAssessment.level}, Score: ${patient.riskAssessment.score}`,
-    }),
-  ]);
+function PatientDetails({ patient }: { patient: Patient }) {
+  const [summaryResult, setSummaryResult] = React.useState<GenerateInitialPatientSummaryOutput | null>(null);
+  const [rationaleResult, setRationaleResult] = React.useState<ExplainRiskAssessmentRationaleOutput | null>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function fetchData() {
+        setIsLoading(true);
+        try {
+            const [summary, rationale] = await Promise.all([
+                generateInitialPatientSummary({
+                    mriScanSummary: patient.mriScanSummary,
+                    cognitiveTestResults: patient.cognitiveTestResults,
+                    patientHistory: patient.patientHistory,
+                }),
+                explainRiskAssessmentRationale({
+                    patientData: JSON.stringify(patient),
+                    riskAssessment: `Level: ${patient.riskAssessment.level}, Score: ${patient.riskAssessment.score}`,
+                }),
+            ]);
+            setSummaryResult(summary);
+            setRationaleResult(rationale);
+        } catch (error) {
+            console.error("Failed to fetch AI data", error);
+            // Handle error state if needed
+        } finally {
+            setIsLoading(false);
+        }
+    }
+    fetchData();
+  }, [patient]);
+
 
   const mriScanImage = getMriScanUrl(patient);
 
@@ -110,7 +134,15 @@ async function PatientDetails({ patient }: { patient: Patient }) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm leading-relaxed">{summaryResult.summary}</p>
+            {isLoading ? (
+                <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                </div>
+            ) : (
+                <p className="text-sm leading-relaxed">{summaryResult?.summary}</p>
+            )}
           </CardContent>
         </Card>
 
@@ -141,9 +173,16 @@ async function PatientDetails({ patient }: { patient: Patient }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm leading-relaxed">
-            {rationaleResult.explanation}
-          </p>
+           {isLoading ? (
+                <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                </div>
+            ) : (
+                <p className="text-sm leading-relaxed">
+                    {rationaleResult?.explanation}
+                </p>
+            )}
         </CardContent>
       </Card>
 
@@ -265,10 +304,14 @@ export default function PatientDetailPage({
 }: {
   params: { id: string };
 }) {
-  const patient = patients.find((p) => p.id === params.id);
+  const { patients: allPatients } = useAuth();
+  const patient = allPatients.find((p) => p.id === params.id);
 
   if (!patient) {
-    notFound();
+    // You can show a loading state here while waiting for auth provider
+    // For now, we'll just return notFound if it's not in the list immediately.
+    // A better approach would be to handle a loading state in the auth provider.
+    return notFound();
   }
 
   return <PatientDetails patient={patient} />;
