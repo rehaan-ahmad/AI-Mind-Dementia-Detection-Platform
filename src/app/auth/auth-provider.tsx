@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { Patient } from '@/lib/types';
 import { patients as initialPatients } from '@/lib/data';
+import { Loader2 } from 'lucide-react';
 
 // As per your spec, defining user roles and permissions.
 // This is a mock and is not connected to a database.
@@ -61,7 +62,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (session) {
       setUser(JSON.parse(session));
     }
-    setLoading(false);
+    // Simulate a longer loading time to demonstrate skeleton loaders
+    setTimeout(() => {
+        setLoading(false);
+    }, 1000);
   }, []);
 
   const login = (userData: User) => {
@@ -118,3 +122,5 @@ export function useAuth() {
   }
   return context;
 }
+
+    

@@ -45,6 +45,7 @@ import { MoreHorizontal, Users, AlertTriangle, ShieldCheck, HeartPulse, ArrowUpD
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '../auth/auth-provider';
+import { format } from 'date-fns';
 
 type SortKey = 'name' | 'age' | 'riskAssessment.level';
 
@@ -148,6 +149,7 @@ export default function Dashboard() {
     const [filter, setFilter] = React.useState('');
     const [sortKey, setSortKey] = React.useState<SortKey>('riskAssessment.level');
     const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('desc');
+    const [lastUpdated] = React.useState(new Date());
 
     const totalPatients = patients.length;
     const highRiskPatients = patients.filter(p => p.riskAssessment.level === 'High').length;
@@ -207,9 +209,12 @@ export default function Dashboard() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-foreground leading-snug">Patient Dashboard</h1>
-        <p className="text-muted-foreground leading-normal">
-          Overview of all patients and their dementia risk assessments.
-        </p>
+        <div className="flex items-center gap-2 mt-1">
+            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+            <p className="text-xs text-muted-foreground">
+            Last updated: {format(lastUpdated, "PPP p")}
+            </p>
+        </div>
       </div>
 
        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 animate-fade-in-up">
@@ -316,5 +321,11 @@ export default function Dashboard() {
     </div>
   );
 }
+
+    
+
+    
+
+    
 
     
