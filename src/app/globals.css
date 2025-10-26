@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 240 5% 96%; /* secondary-grays-f8fafc */
+    --background: 40 17% 98%; /* warm gray-50 - #FAFAF9 */
     --foreground: 222 84% 5%; /* slate-950 */
     --card: 0 0% 100%;
     --card-foreground: 222 84% 5%;
@@ -30,7 +30,7 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem; /* 8px */
-    --sidebar-background: 240 5% 96%;
+    --sidebar-background: 30 17% 96%; /* stone-100 - #F5F5F4 */
     --sidebar-foreground: 222 84% 5%;
     --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 210 40% 98%;
