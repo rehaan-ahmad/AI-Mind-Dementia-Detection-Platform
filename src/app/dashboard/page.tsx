@@ -64,7 +64,7 @@ function getAvatarUrl(patient: Patient) {
 function getRiskBadgeClass(level: Patient['riskAssessment']['level']) {
   switch (level) {
     case 'Low':
-      return 'bg-[#059669]/90 text-white shadow-sm hover:bg-[#059669]/80';
+      return 'bg-[#14B8A6]/90 text-white shadow-sm hover:bg-[#14B8A6]/80';
     case 'Medium':
       return 'bg-[#D97706]/85 text-white shadow-sm hover:bg-[#D97706]/75';
     case 'High':
@@ -168,7 +168,7 @@ export default function Dashboard() {
     const [filter, setFilter] = React.useState('');
     const [sortKey, setSortKey] = React.useState<SortKey>('riskAssessment.level');
     const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('desc');
-    const [lastUpdated, setLastUpdated] = React.useState(new Date());
+    const [lastUpdated] = React.useState(new Date());
     const [selectedRows, setSelectedRows] = React.useState<Set<string>>(new Set());
 
     const totalPatients = patients.length;
@@ -250,173 +250,171 @@ export default function Dashboard() {
         </TableHead>
     );
 
-  return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground leading-snug">Patient Dashboard</h1>
-        <div className="flex items-center gap-2 mt-1">
-            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
-            <p className="text-xs text-muted-foreground">
-            Last updated: {format(lastUpdated, "PPP p")}
-            </p>
-        </div>
-      </div>
-
-       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 animate-fade-in-up">
-        <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Card className="shadow-soft">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
-                            <CardTitle className="text-sm font-medium">
-                            Total Patients
-                            </CardTitle>
-                            <Users className="h-5 w-5 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent className="p-4 pt-0">
-                            <div className="text-2xl font-bold">{totalPatients}</div>
-                            <p className="text-xs text-muted-foreground sr-only">
-                            All patients in the system
-                            </p>
-                        </CardContent>
-                    </Card>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>All patients currently managed in the system.</p>
-                </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-                 <TooltipTrigger asChild>
-                    <Card className="shadow-soft">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
-                            <CardTitle className="text-sm font-medium">
-                            High-Risk
-                            </CardTitle>
-                            <AlertTriangle className="h-5 w-5 text-destructive" />
-                        </CardHeader>
-                        <CardContent className="p-4 pt-0">
-                            <div className="text-2xl font-bold">{highRiskPatients}</div>
-                            <p className="text-xs text-muted-foreground sr-only">
-                                Patients requiring immediate attention
-                            </p>
-                        </CardContent>
-                    </Card>
-                </TooltipTrigger>
-                <TooltipContent>
-                     <p>Number of high-risk patients requiring immediate attention.</p>
-                </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-                 <TooltipTrigger asChild>
-                    <Card className="shadow-soft">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
-                        <CardTitle className="text-sm font-medium">Medium-Risk</CardTitle>
-                        <HeartPulse className="h-5 w-5 text-amber-500" />
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0">
-                        <div className="text-2xl font-bold">{mediumRiskPatients}</div>
-                        <p className="text-xs text-muted-foreground sr-only">
-                            Patients requiring monitoring
-                        </p>
-                    </CardContent>
-                    </Card>
-                </TooltipTrigger>
-                 <TooltipContent>
-                    <p>Number of medium-risk patients who require monitoring.</p>
-                </TooltipContent>
-            </Tooltip>
-             <Tooltip>
-                 <TooltipTrigger asChild>
-                    <Card className="shadow-soft">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
-                        <CardTitle className="text-sm font-medium">Low-Risk</CardTitle>
-                        <ShieldCheck className="h-5 w-5 text-green-500" />
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0">
-                        <div className="text-2xl font-bold">{lowRiskPatients}</div>
-                        <p className="text-xs text-muted-foreground sr-only">
-                            Patients with stable assessments
-                        </p>
-                    </CardContent>
-                    </Card>
-                </TooltipTrigger>
-                 <TooltipContent>
-                    <p>Number of low-risk patients with stable assessments.</p>
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
-      </div>
-
-      <Card className="shadow-soft animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-        <CardHeader>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <CardTitle className="text-xl font-medium leading-snug">Patient List</CardTitle>
-                    <CardDescription className="leading-normal">
-                        A list of all patients currently in the system.
-                    </CardDescription>
-                </div>
-                <div className="relative w-full sm:w-auto">
-                    <label htmlFor="patient-search" className="sr-only">Search by patient name</label>
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                        id="patient-search"
-                        placeholder="Search by patient name..." 
-                        className="pl-8 sm:w-[300px] rounded-md bg-[#F9FAFB] border-[#D1D5DB] placeholder:text-[#6B7280] dark:bg-[#374151] dark:border-[#6B7280] dark:placeholder:text-[#D1D5DB]"
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                    />
-                </div>
+    return (
+        <div className="space-y-8">
+        <div>
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground leading-snug">Patient Dashboard</h1>
+            <div className="flex items-center gap-2 mt-1">
+                <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                <p className="text-xs text-muted-foreground">
+                Last updated: {format(lastUpdated, "PPP p")}
+                </p>
             </div>
-        </CardHeader>
-        <CardContent>
-            {sortedAndFilteredPatients.length > 0 ? (
-                <div className="border rounded-lg overflow-hidden">
-                    <Table>
-                    <TableHeader className="bg-[#F3F4F6] dark:bg-muted">
-                        <TableRow className="hover:bg-transparent border-b border-border">
-                            <TableHead className="p-2 w-[40px]">
-                                <Checkbox
-                                    onCheckedChange={(checked) => handleSelectAll(!!checked)}
-                                    checked={selectedRows.size > 0 && selectedRows.size === sortedAndFilteredPatients.length}
-                                    aria-label="Select all rows"
-                                />
-                            </TableHead>
-                        <TableHead className="hidden w-[60px] sm:table-cell p-2">
-                            <span className="sr-only">Avatar</span>
-                        </TableHead>
-                        <SortableHeader sortKey="name">Name</SortableHeader>
-                        <SortableHeader sortKey="age">Age</SortableHeader>
-                        <TableHead className="hidden md:table-cell font-semibold text-sm text-muted-foreground">Gender</TableHead>
-                        <SortableHeader sortKey="riskAssessment.level">Risk Level</SortableHeader>
-                        <TableHead>
-                            <span className="sr-only">Actions</span>
-                        </TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {sortedAndFilteredPatients.map((patient) => (
-                        <PatientRow key={patient.id} patient={patient} onDelete={handleDeletePatient} isSelected={selectedRows.has(patient.id)} onSelect={handleSelectRow}/>
-                        ))}
-                    </TableBody>
-                    </Table>
-                </div>
-            ) : (
-                <div className="flex flex-col items-center justify-center text-center p-12 border-2 border-dashed rounded-lg">
-                    <Users className="h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-xl font-medium">No Patients Found</h3>
-                    <p className="text-muted-foreground mt-2">
-                        Add a new patient to get started.
-                    </p>
-                     <Button asChild className="mt-4">
-                        <Link href="/patients/new">Add New Patient</Link>
-                    </Button>
-                </div>
-            )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+        </div>
 
-    
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 animate-fade-in-up">
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Card className="shadow-soft">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
+                                <CardTitle className="text-sm font-medium">
+                                Total Patients
+                                </CardTitle>
+                                <Users className="h-5 w-5 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent className="p-4 pt-0">
+                                <div className="text-2xl font-bold">{totalPatients}</div>
+                                <p className="text-xs text-muted-foreground sr-only">
+                                All patients in the system
+                                </p>
+                            </CardContent>
+                        </Card>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>All patients currently managed in the system.</p>
+                    </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Card className="shadow-soft">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
+                                <CardTitle className="text-sm font-medium">
+                                High-Risk
+                                </CardTitle>
+                                <AlertTriangle className="h-5 w-5 text-destructive" />
+                            </CardHeader>
+                            <CardContent className="p-4 pt-0">
+                                <div className="text-2xl font-bold">{highRiskPatients}</div>
+                                <p className="text-xs text-muted-foreground sr-only">
+                                    Patients requiring immediate attention
+                                </p>
+                            </CardContent>
+                        </Card>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Number of high-risk patients requiring immediate attention.</p>
+                    </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Card className="shadow-soft">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
+                            <CardTitle className="text-sm font-medium">Medium-Risk</CardTitle>
+                            <HeartPulse className="h-5 w-5 text-amber-500" />
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0">
+                            <div className="text-2xl font-bold">{mediumRiskPatients}</div>
+                            <p className="text-xs text-muted-foreground sr-only">
+                                Patients requiring monitoring
+                            </p>
+                        </CardContent>
+                        </Card>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Number of medium-risk patients who require monitoring.</p>
+                    </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Card className="shadow-soft">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
+                            <CardTitle className="text-sm font-medium">Low-Risk</CardTitle>
+                            <ShieldCheck className="h-5 w-5 text-green-500" />
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0">
+                            <div className="text-2xl font-bold">{lowRiskPatients}</div>
+                            <p className="text-xs text-muted-foreground sr-only">
+                                Patients with stable assessments
+                            </p>
+                        </CardContent>
+                        </Card>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Number of low-risk patients with stable assessments.</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        </div>
+
+        <Card className="shadow-soft animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <CardHeader>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <CardTitle className="text-xl font-medium leading-snug">Patient List</CardTitle>
+                        <CardDescription className="leading-normal">
+                            A list of all patients currently in the system.
+                        </CardDescription>
+                    </div>
+                    <div className="relative w-full sm:w-auto">
+                        <label htmlFor="patient-search" className="sr-only">Search by patient name</label>
+                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input 
+                            id="patient-search"
+                            placeholder="Search by patient name..." 
+                            className="pl-8 sm:w-[300px] rounded-md bg-[#F9FAFB] border-[#D1D5DB] placeholder:text-[#6B7280] dark:bg-[#374151] dark:border-[#6B7280] dark:placeholder:text-[#D1D5DB]"
+                            value={filter}
+                            onChange={(e) => setFilter(e.target.value)}
+                        />
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent>
+                {sortedAndFilteredPatients.length > 0 ? (
+                    <div className="border rounded-lg overflow-hidden">
+                        <Table>
+                        <TableHeader className="bg-[#F3F4F6] dark:bg-muted">
+                            <TableRow className="hover:bg-transparent border-b border-border">
+                                <TableHead className="p-2 w-[40px]">
+                                    <Checkbox
+                                        onCheckedChange={(checked) => handleSelectAll(!!checked)}
+                                        checked={selectedRows.size > 0 && selectedRows.size === sortedAndFilteredPatients.length}
+                                        aria-label="Select all rows"
+                                    />
+                                </TableHead>
+                            <TableHead className="hidden w-[60px] sm:table-cell p-2">
+                                <span className="sr-only">Avatar</span>
+                            </TableHead>
+                            <SortableHeader sortKey="name">Name</SortableHeader>
+                            <SortableHeader sortKey="age">Age</SortableHeader>
+                            <TableHead className="hidden md:table-cell font-semibold text-sm text-muted-foreground">Gender</TableHead>
+                            <SortableHeader sortKey="riskAssessment.level">Risk Level</SortableHeader>
+                            <TableHead>
+                                <span className="sr-only">Actions</span>
+                            </TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {sortedAndFilteredPatients.map((patient) => (
+                            <PatientRow key={patient.id} patient={patient} onDelete={handleDeletePatient} isSelected={selectedRows.has(patient.id)} onSelect={handleSelectRow}/>
+                            ))}
+                        </TableBody>
+                        </Table>
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center text-center p-12 border-2 border-dashed rounded-lg">
+                        <Users className="h-12 w-12 text-muted-foreground mb-4" />
+                        <h3 className="text-xl font-medium">No Patients Found</h3>
+                        <p className="text-muted-foreground mt-2">
+                            Add a new patient to get started.
+                        </p>
+                        <Button asChild className="mt-4">
+                            <Link href="/patients/new">Add New Patient</Link>
+                        </Button>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+        </div>
+    );
+}
