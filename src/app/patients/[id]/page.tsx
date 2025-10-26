@@ -300,10 +300,11 @@ function PatientDetails({ patient }: { patient: Patient }) {
 }
 
 export default function PatientDetailPage({
-  params,
+  params: paramsProp,
 }: {
   params: { id: string };
 }) {
+  const params = React.use(paramsProp);
   const { patients: allPatients } = useAuth();
   const patient = allPatients.find((p) => p.id === params.id);
 
