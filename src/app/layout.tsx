@@ -49,14 +49,14 @@ function AppLayout({
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader className="border-b">
+        <SidebarHeader className="border-b border-sidebar-border">
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 font-semibold"
+            className="flex items-center gap-2 font-semibold text-sidebar-primary-foreground"
             aria-label="AI-Mind Home"
           >
-            <BrainCircuit className="h-6 w-6 text-primary-foreground" />
-            <span className="text-lg text-primary-foreground">AI-Mind</span>
+            <BrainCircuit className="h-6 w-6 text-sidebar-primary" />
+            <span className="text-lg">AI-Mind</span>
           </Link>
         </SidebarHeader>
         <SidebarContent>
