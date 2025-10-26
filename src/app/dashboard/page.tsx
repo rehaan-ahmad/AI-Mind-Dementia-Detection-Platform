@@ -75,20 +75,20 @@ const riskLevelOrder: { [key in Patient['riskAssessment']['level']]: number } = 
 
 const PatientRow = React.memo(({ patient, onDelete }: { patient: Patient, onDelete: (patientId: string) => void }) => {
     return (
-        <TableRow className="hover:bg-muted/50 even:bg-slate-50 dark:even:bg-white/5 border-b border-slate-200 dark:border-slate-800">
+        <TableRow className="hover:bg-muted/50 even:bg-card dark:even:bg-white/5 border-b border-border">
             <TableCell className="hidden sm:table-cell p-2">
             <Image
                 alt="Patient avatar"
-                className="aspect-square rounded-full object-cover shadow-md"
+                className="aspect-square rounded-full object-cover"
                 height="40"
                 src={getAvatarUrl(patient)}
                 width="40"
                 data-ai-hint="person portrait"
             />
             </TableCell>
-            <TableCell className="font-medium text-slate-900 dark:text-slate-50">{patient.name}</TableCell>
-            <TableCell className="text-slate-600 dark:text-slate-400">{patient.age}</TableCell>
-            <TableCell className="hidden md:table-cell text-slate-600 dark:text-slate-400">
+            <TableCell className="font-medium text-foreground">{patient.name}</TableCell>
+            <TableCell className="text-muted-foreground">{patient.age}</TableCell>
+            <TableCell className="hidden md:table-cell text-muted-foreground">
             {patient.gender}
             </TableCell>
             <TableCell>
@@ -195,7 +195,7 @@ export default function Dashboard() {
     }, [patients, filter, sortKey, sortDirection]);
 
     const SortableHeader = ({ sortKey: key, children, className }: { sortKey: SortKey, children: React.ReactNode, className?: string }) => (
-        <TableHead className={cn("text-slate-500 dark:text-slate-400", className)}>
+        <TableHead className={cn("text-muted-foreground", className)}>
             <Button variant="ghost" onClick={() => handleSort(key)} className="px-2 font-semibold text-sm">
                 {children}
                 {sortKey === key && <ArrowUpDown className="ml-2 h-4 w-4" />}
@@ -206,14 +206,14 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">Patient Dashboard</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Patient Dashboard</h1>
         <p className="text-muted-foreground">
           Overview of all patients and their dementia risk assessments.
         </p>
       </div>
 
        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-soft rounded-xl">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">
               Total Patients
@@ -227,12 +227,12 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card className="shadow-soft rounded-xl">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">
               High-Risk
             </CardTitle>
-            <AlertTriangle className="h-5 w-5 text-red-500" />
+            <AlertTriangle className="h-5 w-5 text-destructive" />
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <div className="text-2xl font-bold">{highRiskPatients}</div>
@@ -241,7 +241,7 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card className="shadow-soft rounded-xl">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">Medium-Risk</CardTitle>
             <HeartPulse className="h-5 w-5 text-yellow-500" />
@@ -253,7 +253,7 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card className="shadow-soft rounded-xl">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
             <CardTitle className="text-sm font-medium">Low-Risk</CardTitle>
              <ShieldCheck className="h-5 w-5 text-green-500" />
@@ -267,7 +267,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Card className="shadow-soft rounded-xl">
+      <Card>
         <CardHeader>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
@@ -290,14 +290,14 @@ export default function Dashboard() {
         <CardContent>
           <div className="border rounded-lg overflow-hidden">
             <Table>
-              <TableHeader className="bg-slate-50 dark:bg-slate-800">
-                <TableRow className="hover:bg-transparent border-b border-slate-200 dark:border-slate-700">
+              <TableHeader className="bg-muted">
+                <TableRow className="hover:bg-transparent border-b border-border">
                   <TableHead className="hidden w-[60px] sm:table-cell p-2">
                     <span className="sr-only">Avatar</span>
                   </TableHead>
                   <SortableHeader sortKey="name">Name</SortableHeader>
                   <SortableHeader sortKey="age">Age</SortableHeader>
-                  <TableHead className="hidden md:table-cell font-semibold text-sm text-slate-500 dark:text-slate-400">Gender</TableHead>
+                  <TableHead className="hidden md:table-cell font-semibold text-sm text-muted-foreground">Gender</TableHead>
                   <SortableHeader sortKey="riskAssessment.level">Risk Level</SortableHeader>
                   <TableHead>
                     <span className="sr-only">Actions</span>
@@ -317,4 +317,5 @@ export default function Dashboard() {
   );
 }
 
+    
     
