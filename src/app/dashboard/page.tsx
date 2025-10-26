@@ -75,14 +75,14 @@ const riskLevelOrder: { [key in Patient['riskAssessment']['level']]: number } = 
 
 const PatientRow = React.memo(({ patient, onDelete }: { patient: Patient, onDelete: (patientId: string) => void }) => {
     return (
-        <TableRow>
-            <TableCell className="hidden sm:table-cell">
+        <TableRow className="hover:bg-muted/50 even:bg-muted/20 dark:even:bg-white/5">
+            <TableCell className="hidden sm:table-cell p-2">
             <Image
                 alt="Patient avatar"
-                className="aspect-square rounded-full object-cover"
-                height="64"
+                className="aspect-square rounded-full object-cover shadow-md"
+                height="40"
                 src={getAvatarUrl(patient)}
-                width="64"
+                width="40"
                 data-ai-hint="person portrait"
             />
             </TableCell>
@@ -92,7 +92,7 @@ const PatientRow = React.memo(({ patient, onDelete }: { patient: Patient, onDele
             {patient.gender}
             </TableCell>
             <TableCell>
-            <Badge className={cn(getRiskBadgeClass(patient.riskAssessment.level))}>
+            <Badge className={cn("font-medium", getRiskBadgeClass(patient.riskAssessment.level))}>
                 {patient.riskAssessment.level}
             </Badge>
             </TableCell>
@@ -194,9 +194,9 @@ export default function Dashboard() {
             });
     }, [patients, filter, sortKey, sortDirection]);
 
-    const SortableHeader = ({ sortKey: key, children }: { sortKey: SortKey, children: React.ReactNode }) => (
-        <TableHead>
-            <Button variant="ghost" onClick={() => handleSort(key)} className="px-2">
+    const SortableHeader = ({ sortKey: key, children, className }: { sortKey: SortKey, children: React.ReactNode, className?: string }) => (
+        <TableHead className={className}>
+            <Button variant="ghost" onClick={() => handleSort(key)} className="px-2 font-medium">
                 {children}
                 {sortKey === key && <ArrowUpDown className="ml-2 h-4 w-4" />}
             </Button>
@@ -288,29 +288,33 @@ export default function Dashboard() {
             </div>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="hidden w-[100px] sm:table-cell">
-                  <span className="sr-only">Avatar</span>
-                </TableHead>
-                <SortableHeader sortKey="name">Name</SortableHeader>
-                <SortableHeader sortKey="age">Age</SortableHeader>
-                <TableHead className="hidden md:table-cell">Gender</TableHead>
-                <SortableHeader sortKey="riskAssessment.level">Risk Level</SortableHeader>
-                <TableHead>
-                  <span className="sr-only">Actions</span>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedAndFilteredPatients.map((patient) => (
-                <PatientRow key={patient.id} patient={patient} onDelete={handleDeletePatient} />
-              ))}
-            </TableBody>
-          </Table>
+          <div className="border rounded-md">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50 hover:bg-muted/50">
+                  <TableHead className="hidden w-[60px] sm:table-cell p-2">
+                    <span className="sr-only">Avatar</span>
+                  </TableHead>
+                  <SortableHeader sortKey="name">Name</SortableHeader>
+                  <SortableHeader sortKey="age">Age</SortableHeader>
+                  <TableHead className="hidden md:table-cell font-medium">Gender</TableHead>
+                  <SortableHeader sortKey="riskAssessment.level">Risk Level</SortableHeader>
+                  <TableHead>
+                    <span className="sr-only">Actions</span>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {sortedAndFilteredPatients.map((patient) => (
+                  <PatientRow key={patient.id} patient={patient} onDelete={handleDeletePatient} />
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
   );
 }
+
+    
