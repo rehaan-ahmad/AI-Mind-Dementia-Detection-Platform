@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -22,13 +23,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { createPatient } from '@/lib/actions';
+import { createPatient as mockCreatePatient } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
 import * as React from 'react';
-import { Separator } from './ui/separator';
 import { ProgressStepper } from './ui/progress-stepper';
+import { useAuth } from '@/app/auth/auth-provider';
 
 const patientFormSchema = z.object({
   name: z.string().min(2, {
@@ -65,6 +66,7 @@ const steps = [
 export function PatientForm() {
   const router = useRouter();
   const { toast } = useToast();
+  const { addPatient } = useAuth();
   const [currentStep, setCurrentStep] = React.useState(0);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   
@@ -106,12 +108,17 @@ export function PatientForm() {
   async function onSubmit(data: PatientFormValues) {
     setIsSubmitting(true);
     try {
-      await createPatient(data);
+      // We still call the mock server action to simulate a network request
+      await mockCreatePatient(data);
+      
+      // But we update the client-side state using our context
+      addPatient(data);
+
       toast({
         title: 'Patient Added',
-        description: 'The new patient has been successfully saved (mock).',
+        description: 'The new patient has been successfully saved.',
       });
-      router.push('/');
+      router.push('/dashboard');
     } catch (error) {
       toast({
         variant: 'destructive',

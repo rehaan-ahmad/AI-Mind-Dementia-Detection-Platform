@@ -1,7 +1,10 @@
+
 'use client';
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import type { Patient } from '@/lib/types';
+import { patients as initialPatients } from '@/lib/data';
 
 // As per your spec, defining user roles and permissions.
 // This is a mock and is not connected to a database.
@@ -20,6 +23,9 @@ interface AuthContextType {
   loading: boolean;
   login: (user: User) => void;
   logout: () => void;
+  patients: Patient[];
+  addPatient: (patient: Omit<Patient, 'id'>) => void;
+  deletePatient: (patientId: string) => void;
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -46,6 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [user, setUser] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState(true); // Start with loading true
+  const [patients, setPatients] = React.useState<Patient[]>(initialPatients);
 
   // In a real app, you would have a useEffect here to check for a Firebase session.
   React.useEffect(() => {
@@ -69,11 +76,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push('/login');
   };
 
+  const addPatient = (patientData: Omit<Patient, 'id'>) => {
+    const newPatient: Patient = {
+        ...patientData,
+        id: `pat_${Date.now()}`, // Create a unique ID for the mock patient
+        avatarId: ['avatar1', 'avatar2', 'avatar3'][Math.floor(Math.random() * 3)],
+        mriScanId: ['mri-scan-1', 'mri-scan-2', 'mri-scan-3'][Math.floor(Math.random() * 3)],
+        riskAssessment: {
+          level: ['Low', 'Medium', 'High'][Math.floor(Math.random() * 3)] as 'Low' | 'Medium' | 'High',
+          score: Math.floor(Math.random() * 80) + 10,
+        },
+        timeline: [
+            { date: new Date().toISOString(), title: 'Patient Record Created', description: 'Initial patient data entered into the system.', icon: 'FileText' },
+        ]
+    };
+    setPatients(prev => [newPatient, ...prev]);
+  };
+
+  const deletePatient = (patientId: string) => {
+    setPatients(prev => prev.filter(p => p.id !== patientId));
+  };
+
+
   const value = {
     user,
     loading,
     login,
     logout,
+    patients,
+    addPatient,
+    deletePatient
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

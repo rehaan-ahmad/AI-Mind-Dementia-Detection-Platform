@@ -38,13 +38,13 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
-import { patients as initialPatients } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Patient } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Users, AlertTriangle, ShieldCheck, HeartPulse, ArrowUpDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '../auth/auth-provider';
 
 type SortKey = 'name' | 'age' | 'riskAssessment.level';
 
@@ -144,7 +144,7 @@ PatientRow.displayName = 'PatientRow';
 
 export default function Dashboard() {
     const { toast } = useToast();
-    const [patients, setPatients] = React.useState<Patient[]>(initialPatients);
+    const { patients, deletePatient } = useAuth();
     const [filter, setFilter] = React.useState('');
     const [sortKey, setSortKey] = React.useState<SortKey>('riskAssessment.level');
     const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('desc');
@@ -164,10 +164,10 @@ export default function Dashboard() {
     };
     
     const handleDeletePatient = (patientId: string) => {
-        setPatients(prevPatients => prevPatients.filter(p => p.id !== patientId));
+        deletePatient(patientId);
         toast({
             title: 'Patient Deleted',
-            description: 'The patient has been removed from the list (mock).',
+            description: 'The patient has been removed from the list.',
         })
     };
 
