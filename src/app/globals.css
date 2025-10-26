@@ -7,7 +7,7 @@
   :root {
     --background: 40 17% 98%; /* warm gray-50 - #FAFAF9 */
     --foreground: 224 20% 25%; /* gray-700 #374151 */
-    --card: 220 17% 98%; /* #F8F9FA */
+    --card: 0 0% 100%;
     --card-foreground: 224 20% 25%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 20% 25%;
@@ -31,11 +31,11 @@
     --chart-5: 27 87% 67%;
     --radius: 0.75rem; /* 12px */
     --sidebar-background: 30 17% 96%; /* stone-100 - #F5F5F4 */
-    --sidebar-foreground: 222 84% 5%;
-    --sidebar-primary: 217 91% 60%;
+    --sidebar-foreground: 28 4% 23%; /* stone-700 - #44403C */
+    --sidebar-primary: 236 82% 66%; /* indigo-500 - #6366F1 */
     --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 210 40% 96.1%;
-    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-accent: 30 14% 91%; /* stone-200 - #E7E5E4 */
+    --sidebar-accent-foreground: 28 4% 23%;
     --sidebar-border: 214.3 31.8% 91.4%;
     --sidebar-ring: 222.2 84% 4.9%;
   }

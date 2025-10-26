@@ -527,7 +527,7 @@ const sidebarMenuButtonVariants = cva(
         lg: "h-12 text-sm group-data-[collapsible=icon]:!p-0",
       },
       isActive: {
-        true: "bg-sidebar-accent text-sidebar-accent-foreground border-l-4 border-primary pl-3",
+        true: "bg-sidebar-accent text-sidebar-accent-foreground border-l-4 border-sidebar-primary pl-[calc(0.5rem-1px)]",
         false: "border-l-4 border-transparent",
       },
     },
