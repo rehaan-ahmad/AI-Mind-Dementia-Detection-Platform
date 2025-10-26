@@ -206,7 +206,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Patient Dashboard</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Patient Dashboard</h1>
         <p className="text-muted-foreground">
           Overview of all patients and their dementia risk assessments.
         </p>
@@ -280,7 +280,7 @@ export default function Dashboard() {
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input 
                         placeholder="Search by patient name..." 
-                        className="pl-8 sm:w-[300px] rounded-md"
+                        className="pl-8 sm:w-[300px] rounded-md bg-[#F9FAFB] border-[#D1D5DB] placeholder:text-[#6B7280] dark:bg-[#374151] dark:border-[#6B7280] dark:placeholder:text-[#D1D5DB]"
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                     />
