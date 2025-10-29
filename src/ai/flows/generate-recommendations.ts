@@ -3,29 +3,13 @@
  * @fileOverview Generates clinical recommendations based on patient data.
  *
  * - generateRecommendations - A function that generates recommendations.
- * - GenerateRecommendationsInput - The input type for the generateRecommendations function.
- * - GenerateRecommendationsOutput - The return type for the generateRecommendations function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const RecommendationSchema = z.object({
-  area: z.string().describe('The clinical area of the recommendation (e.g., "Cognitive Function", "Physical Health").'),
-  recommendation: z.string().describe('The specific, actionable recommendation for the healthcare provider.'),
-  priority: z.enum(['High', 'Medium', 'Low']).describe('The priority level of the recommendation.'),
-  // icon is not part of the AI output, it will be mapped in the UI.
-});
-
-export const GenerateRecommendationsInputSchema = z.object({
-  patientData: z.string().describe('A JSON string of all available patient data, including demographics, history, test results, and risk assessment.'),
-});
-export type GenerateRecommendationsInput = z.infer<typeof GenerateRecommendationsInputSchema>;
-
-export const GenerateRecommendationsOutputSchema = z.object({
-  recommendations: z.array(RecommendationSchema).describe('A list of clinical recommendations.'),
-});
-export type GenerateRecommendationsOutput = z.infer<typeof GenerateRecommendationsOutputSchema>;
+import {
+  generateRecommendationsFlow,
+  type GenerateRecommendationsInput,
+  type GenerateRecommendationsOutput
+} from './recommendations.schemas';
 
 export async function generateRecommendations(input: GenerateRecommendationsInput): Promise<GenerateRecommendationsOutput> {
   // return generateRecommendationsFlow(input);
@@ -56,31 +40,3 @@ export async function generateRecommendations(input: GenerateRecommendationsInpu
     ]
   };
 }
-
-/*
-const prompt = ai.definePrompt({
-  name: 'generateRecommendationsPrompt',
-  input: {schema: GenerateRecommendationsInputSchema},
-  output: {schema: GenerateRecommendationsOutputSchema},
-  prompt: `You are an expert medical AI assistant. Your task is to provide clinical recommendations for a patient based on their comprehensive data profile.
-
-Analyze the following patient data:
-{{{patientData}}}
-
-Based on the data, generate a list of 3-5 actionable recommendations for the healthcare provider. For each recommendation, specify the clinical area, the recommendation itself, and a priority level (High, Medium, or Low). Focus on the most critical next steps for diagnosis, monitoring, or treatment.
-
-Return the recommendations in the specified JSON format.`,
-});
-
-const generateRecommendationsFlow = ai.defineFlow(
-  {
-    name: 'generateRecommendationsFlow',
-    inputSchema: GenerateRecommendationsInputSchema,
-    outputSchema: GenerateRecommendationsOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);
-*/
