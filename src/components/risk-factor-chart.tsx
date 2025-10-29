@@ -52,34 +52,36 @@ export function RiskFactorChart() {
   
   return (
     <div className="h-[350px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={chartData}
-          layout="vertical"
-          margin={{
-            top: 5,
-            right: 20,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-          <YAxis
-            dataKey="factor"
-            type="category"
-            tickLine={false}
-            axisLine={false}
-            tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }}
-            width={80}
-          />
-          <XAxis type="number" dataKey="contribution" tickLine={false} axisLine={false} tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
-          <Tooltip
-            cursor={{ fill: 'hsl(var(--muted))' }}
-            content={<ChartTooltipContent indicator="dot" />}
-          />
-          <Bar dataKey="contribution" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
+      <ChartContainer config={chartConfig}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={chartData}
+            layout="vertical"
+            margin={{
+              top: 5,
+              right: 20,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+            <YAxis
+              dataKey="factor"
+              type="category"
+              tickLine={false}
+              axisLine={false}
+              tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }}
+              width={80}
+            />
+            <XAxis type="number" dataKey="contribution" tickLine={false} axisLine={false} tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
+            <Tooltip
+              cursor={{ fill: 'hsl(var(--muted))' }}
+              content={<ChartTooltipContent indicator="dot" />}
+            />
+            <Bar dataKey="contribution" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartContainer>
     </div>
   );
 }
