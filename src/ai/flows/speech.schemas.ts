@@ -1,8 +1,6 @@
+
 /**
- * @fileOverview Schemas for the speech analysis flow.
- *
- * - AnalyzeSpeechForDementiaIndicatorsInput - The input type for the analyzeSpeechForDementiaIndicators function.
- * - AnalyzeSpeechForDementiaIndicatorsOutput - The return type for the analyzeSpeechForDementiaIndicators function.
+ * @fileOverview Standardized schemas for the speech analysis flow.
  */
 
 import { z } from 'genkit';
